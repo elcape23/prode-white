@@ -1,0 +1,5 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "npm ci --prefix prode-white && prisma generate && npm run build --prefix prode-white",
+  "outputDirectory": "prode-white"
+}
