@@ -1,0 +1,133 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Enums ────────────────────────────────────────────────────
+
+enum ParticipantStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum BonusPosition {
+  CHAMPION
+  FINALIST_1
+  FINALIST_2
+  SEMI_1
+  SEMI_2
+  SEMI_3
+  SEMI_4
+}
+
+// ─── Sponsor Codes ────────────────────────────────────────────
+
+model SponsorCode {
+  id           String        @id @default(cuid())
+  code         String        @unique
+  sponsorName  String
+  maxUses      Int           @default(10)
+  active       Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+
+  participants Participant[]
+}
+
+// ─── Participants ─────────────────────────────────────────────
+
+model Participant {
+  id               String            @id @default(cuid())
+  name             String
+  phone            String            @unique
+  pin              String?
+  status           ParticipantStatus @default(PENDING)
+  sponsorCodeId    String?
+  paymentReference String
+  pricePaid        Int
+  createdAt        DateTime          @default(now())
+  approvedAt       DateTime?
+
+  sponsorCode      SponsorCode?      @relation(fields: [sponsorCodeId], references: [id])
+  predictions      Prediction[]
+  bonusPredictions BonusPrediction[]
+}
+
+// ─── Tournament ───────────────────────────────────────────────
+
+model Tournament {
+  id           String    @id @default(cuid())
+  name         String
+  firstMatchAt DateTime?
+  champion     String?
+  finalist1    String?
+  finalist2    String?
+  semi1        String?
+  semi2        String?
+  semi3        String?
+  semi4        String?
+  createdAt    DateTime  @default(now())
+
+  matches          Match[]
+  bonusPredictions BonusPrediction[]
+}
+
+// ─── Matches ──────────────────────────────────────────────────
+
+model Match {
+  id              String    @id @default(cuid())
+  tournamentId    String
+  round           String
+  homeTeam        String
+  awayTeam        String
+  scheduledAt     DateTime
+  homeScore       Int?
+  awayScore       Int?
+  resultEnteredAt DateTime?
+  createdAt       DateTime  @default(now())
+
+  tournament  Tournament   @relation(fields: [tournamentId], references: [id])
+  predictions Prediction[]
+}
+
+// ─── Predictions ──────────────────────────────────────────────
+
+model Prediction {
+  id            String   @id @default(cuid())
+  participantId String
+  matchId       String
+  homeScore     Int
+  awayScore     Int
+  points        Int?
+  submittedAt   DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  participant Participant @relation(fields: [participantId], references: [id])
+  match       Match       @relation(fields: [matchId], references: [id])
+
+  @@unique([participantId, matchId])
+}
+
+// ─── Bonus Predictions ────────────────────────────────────────
+
+model BonusPrediction {
+  id            String        @id @default(cuid())
+  participantId String
+  tournamentId  String
+  position      BonusPosition
+  teamName      String
+  points        Int?
+  updatedAt     DateTime      @updatedAt
+
+  participant Participant @relation(fields: [participantId], references: [id])
+  tournament  Tournament  @relation(fields: [tournamentId], references: [id])
+
+  @@unique([participantId, tournamentId, position])
+}
