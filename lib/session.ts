@@ -2,6 +2,10 @@ import "server-only";
 import { cookies } from "next/headers";
 import { encrypt, decrypt } from "@/lib/session-crypto";
 
+if (!process.env.SESSION_SECRET && process.env.NODE_ENV === "production") {
+  throw new Error("SESSION_SECRET env var is required in production");
+}
+
 export type { SessionPayload } from "@/lib/session-crypto";
 
 export { encrypt, decrypt };
