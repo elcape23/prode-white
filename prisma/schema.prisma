@@ -84,6 +84,7 @@ model Tournament {
 model Match {
   id              String    @id @default(cuid())
   tournamentId    String
+  externalId      Int?      @unique
   round           String
   homeTeam        String
   awayTeam        String
