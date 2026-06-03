@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { decrypt } from "@/lib/session";
+import { decrypt } from "@/lib/session-crypto";
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
