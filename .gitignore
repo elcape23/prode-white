@@ -1,6 +1,14 @@
 node_modules
-# Keep environment variables out of version control
-.env
+.next
+.vercel
 
+# env files
+.env
+.env*.local
+
+# generated Prisma client
 /generated/prisma
-node_modules
+
+# misc
+.DS_Store
+tsconfig.tsbuildinfo
