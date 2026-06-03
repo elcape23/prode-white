@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 import { Badge } from "@/components/ui/badge";
 
-export const revalidate = 120;
+export const dynamic = "force-dynamic";
 
 const MEDALS = ["🥇", "🥈", "🥉"];
 const PRIZES = ["$350.000", "$100.000", "$30.000"];

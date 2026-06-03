@@ -14,7 +14,7 @@ function formatDate(d: Date) {
   });
 }
 
-export const revalidate = 300; // ISR every 5 min
+export const dynamic = "force-dynamic";
 
 export default async function FixturePage() {
   const matches = await prisma.match.findMany({
