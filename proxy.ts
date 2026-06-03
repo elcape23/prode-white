@@ -1,32 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
-import { decrypt } from "@/lib/session-crypto";
 
-export async function proxy(request: NextRequest) {
+// Optimistic redirects based on cookie presence only.
+// Actual JWT verification and security enforcement happens inside each
+// page/action via verifyAdmin() and verifyParticipant() in lib/dal.ts.
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const token = request.cookies.get("session")?.value;
-  const session = await decrypt(token);
+  const hasSession = request.cookies.has("session");
 
-  // Admin routes (except login)
-  if (pathname.startsWith("/admin") && !pathname.startsWith("/admin/login")) {
-    if (!session || session.role !== "admin") {
+  if (!hasSession) {
+    if (pathname.startsWith("/admin") && !pathname.startsWith("/admin/login")) {
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }
-  }
-
-  // Participant dashboard routes
-  if (pathname.startsWith("/dashboard") || pathname.startsWith("/pronosticos") || pathname.startsWith("/bonus")) {
-    if (!session || session.role !== "participant") {
+    if (
+      pathname.startsWith("/dashboard") ||
+      pathname.startsWith("/pronosticos") ||
+      pathname.startsWith("/bonus")
+    ) {
       return NextResponse.redirect(new URL("/login", request.url));
-    }
-  }
-
-  // Redirect logged-in users away from auth pages
-  if (session) {
-    if (pathname === "/login" && session.role === "participant") {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
-    }
-    if (pathname === "/admin/login" && session.role === "admin") {
-      return NextResponse.redirect(new URL("/admin", request.url));
     }
   }
 
