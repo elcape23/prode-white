@@ -27,17 +27,17 @@ function BonusForm() {
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--color-navy)] flex flex-col">
-      <header className="px-4 py-3 text-white">
+    <div className="min-h-screen bg-background flex flex-col">
+      <header className="bg-fill-brand px-4 py-3 text-white">
         <p className="text-xs text-white/60">Pronósticos Bonus</p>
         <p className="font-bold">Antes del primer partido</p>
       </header>
 
-      <main className="flex-1 bg-gray-50 rounded-t-3xl p-4 mt-2">
+      <main className="flex-1 bg-muted rounded-t-3xl p-4 mt-2">
         <div className="space-y-4">
-          <div className="bg-[var(--color-navy)] text-white rounded-xl p-4 text-sm">
-            <p className="font-bold mb-1">¿Cómo funcionan?</p>
-            <p className="text-white/70 text-xs">
+          <div className="bg-surface-raised border rounded-xl p-4 text-sm">
+            <p className="font-bold mb-1 text-fg-default">¿Cómo funcionan?</p>
+            <p className="text-fg-secondary text-xs">
               Elegí el campeón, finalistas y semifinalistas. Se cierran cuando empiece el primer partido.
               No importa el orden — si acertás el equipo en cualquier posición, sumás los puntos.
             </p>
@@ -45,7 +45,7 @@ function BonusForm() {
 
           {state?.ok && (
             <Alert>
-              <AlertDescription className="text-green-700 font-medium">
+              <AlertDescription className="text-fg-success font-medium">
                 ✅ Pronósticos guardados correctamente.
               </AlertDescription>
             </Alert>
@@ -58,10 +58,10 @@ function BonusForm() {
 
           <form action={action} className="space-y-3">
             {fields.map(({ key, label, points }) => (
-              <div key={key} className="bg-white border rounded-xl px-4 py-3">
+              <div key={key} className="bg-card border rounded-xl px-4 py-3">
                 <div className="flex items-center justify-between mb-1.5">
                   <Label htmlFor={key} className="font-bold text-sm">{label}</Label>
-                  <span className="text-xs font-bold text-[var(--color-gold)] bg-[var(--color-navy)] px-2 py-0.5 rounded-full">
+                  <span className="text-xs font-bold text-accent bg-fill-brand px-2 py-0.5 rounded-full">
                     {points}
                   </span>
                 </div>

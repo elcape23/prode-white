@@ -18,7 +18,7 @@ export function SyncResultsButton() {
 
       {state?.ok && (
         <Alert>
-          <AlertDescription className="text-green-700">
+          <AlertDescription className="text-fg-success">
             {state.updated === 0
               ? "✅ Todo al día, sin cambios nuevos."
               : `✅ ${state.updated} partido${state.updated !== 1 ? "s" : ""} actualizado${state.updated !== 1 ? "s" : ""} con resultados y puntos recalculados.`}

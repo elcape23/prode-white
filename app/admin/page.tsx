@@ -22,14 +22,14 @@ export default async function AdminDashboard() {
 
   const stats = [
     { label: "Total inscriptos", value: total, color: "text-foreground" },
-    { label: "Pendientes", value: pending, color: "text-amber-600" },
-    { label: "Aprobados", value: approved, color: "text-green-600" },
-    { label: "Rechazados", value: rejected, color: "text-red-600" },
+    { label: "Pendientes", value: pending, color: "text-warning" },
+    { label: "Aprobados", value: approved, color: "text-success" },
+    { label: "Rechazados", value: rejected, color: "text-destructive" },
   ];
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-black text-[var(--color-navy)]">Dashboard</h1>
+      <h1 className="text-2xl font-black text-fg-brand">Dashboard</h1>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {stats.map((s) => (
@@ -51,7 +51,7 @@ export default async function AdminDashboard() {
           <CardTitle className="text-base">Recaudación estimada</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-3xl font-black text-[var(--color-gold)]">
+          <p className="text-3xl font-black text-accent">
             ${revenue.toLocaleString("es-AR")}
           </p>
           <p className="text-xs text-muted-foreground mt-1">

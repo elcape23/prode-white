@@ -65,11 +65,11 @@ export default function RegisterPage() {
   if (formState && "success" in formState) {
     return (
       <div className="flex flex-col items-center gap-6 py-8 text-center">
-        <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
+        <div className="w-16 h-16 rounded-full bg-success/10 flex items-center justify-center">
           <span className="text-3xl">✅</span>
         </div>
         <div>
-          <h2 className="text-xl font-bold text-[var(--color-navy)]">¡Solicitud enviada!</h2>
+          <h2 className="text-xl font-bold text-fg-brand">¡Solicitud enviada!</h2>
           <p className="text-muted-foreground mt-2 text-sm">
             Tu inscripción está <strong>pendiente de aprobación</strong>. Una vez que
             confirmemos tu pago te enviamos el PIN de acceso por WhatsApp.
@@ -85,7 +85,7 @@ export default function RegisterPage() {
   return (
     <div className="flex flex-col gap-6 py-4">
       <div className="text-center">
-        <h1 className="text-2xl font-black text-[var(--color-navy)] uppercase">
+        <h1 className="text-2xl font-black text-fg-brand uppercase">
           Sumarme al Prode
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
@@ -94,13 +94,13 @@ export default function RegisterPage() {
       </div>
 
       {/* Price display */}
-      <div className="bg-[var(--color-navy)] text-white rounded-xl p-4 text-center">
-        <p className="text-xs uppercase tracking-widest text-white/60">Valor de inscripción</p>
-        <p className="text-3xl font-black mt-1">
+      <div className="bg-surface-raised border rounded-xl p-4 text-center">
+        <p className="text-xs uppercase tracking-widest text-fg-tertiary">Valor de inscripción</p>
+        <p className="text-3xl font-black mt-1 text-fg-default">
           ${price.toLocaleString("es-AR")}
         </p>
         {price === SPONSOR_PRICE && (
-          <Badge className="mt-1 bg-[var(--color-gold)] text-black text-xs font-bold">
+          <Badge className="mt-1 bg-accent text-accent-foreground text-xs font-bold">
             35% OFF — Código sponsor aplicado
           </Badge>
         )}
@@ -145,7 +145,7 @@ export default function RegisterPage() {
             <p className="text-xs text-muted-foreground">Verificando código...</p>
           )}
           {codeStatus.state === "valid" && (
-            <p className="text-xs text-green-600">
+            <p className="text-xs text-fg-success">
               ✓ {codeStatus.sponsorName} — {codeStatus.spotsLeft} cupos disponibles
             </p>
           )}

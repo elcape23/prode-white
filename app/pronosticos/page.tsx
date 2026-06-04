@@ -31,8 +31,8 @@ export default async function PronosticosPage() {
   const filled = myPredictions.length;
 
   return (
-    <div className="min-h-screen bg-[var(--color-navy)] flex flex-col">
-      <header className="px-4 py-3 flex items-center justify-between text-white">
+    <div className="min-h-screen bg-background flex flex-col">
+      <header className="bg-fill-brand px-4 py-3 flex items-center justify-between text-white">
         <div>
           <p className="text-xs text-white/60">Pronósticos</p>
           <p className="font-bold">{session.name}</p>
@@ -48,7 +48,7 @@ export default async function PronosticosPage() {
         </div>
       </header>
 
-      <main className="flex-1 bg-gray-50 rounded-t-3xl p-4 space-y-6 overflow-y-auto mt-2">
+      <main className="flex-1 bg-muted rounded-t-3xl p-4 space-y-6 overflow-y-auto mt-2">
         {matches.length === 0 ? (
           <p className="text-center text-muted-foreground py-12">
             El fixture aún no fue cargado por el admin.

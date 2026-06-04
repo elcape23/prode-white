@@ -29,7 +29,7 @@ export default async function RankingPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-black text-[var(--color-navy)] uppercase">Ranking</h1>
+        <h1 className="text-2xl font-black text-fg-brand uppercase">Ranking</h1>
         <p className="text-sm text-muted-foreground">{ranked.length} participantes</p>
       </div>
 
@@ -37,10 +37,10 @@ export default async function RankingPage() {
       {ranked.length >= 1 && (
         <div className="grid grid-cols-3 gap-2">
           {PRIZES.map((prize, i) => (
-            <div key={i} className="bg-[var(--color-navy)] text-white rounded-xl p-3 text-center">
+            <div key={i} className="bg-surface-raised border rounded-xl p-3 text-center">
               <p className="text-xl">{MEDALS[i]}</p>
-              <p className="text-xs text-white/60 mt-1">{i + 1}° puesto</p>
-              <p className="font-black text-[var(--color-gold)] text-sm">{prize}</p>
+              <p className="text-xs text-fg-tertiary mt-1">{i + 1}° puesto</p>
+              <p className="font-black text-fg-accent text-sm">{prize}</p>
             </div>
           ))}
         </div>
@@ -58,7 +58,7 @@ export default async function RankingPage() {
             return (
               <div
                 key={p.id}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl border bg-white ${isTop3 ? "border-[var(--color-gold)]/40 shadow-sm" : ""}`}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl border bg-card ${isTop3 ? "border-accent/40 shadow-sm" : ""}`}
               >
                 <span className={`text-lg w-8 text-center ${isTop3 ? "" : "text-muted-foreground font-mono text-sm"}`}>
                   {isTop3 ? MEDALS[i] : pos}
@@ -70,7 +70,7 @@ export default async function RankingPage() {
                     <Badge variant="secondary" className="text-xs">+{p.bonusPoints} bonus</Badge>
                   )}
                 </div>
-                <span className="font-black text-[var(--color-navy)] text-lg w-12 text-right">
+                <span className="font-black text-fg-brand text-lg w-12 text-right">
                   {p.total}
                 </span>
               </div>

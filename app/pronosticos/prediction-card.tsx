@@ -59,7 +59,7 @@ export function PredictionCard({
   };
 
   return (
-    <div className={`bg-white border rounded-xl px-4 py-3 ${locked ? "opacity-60" : ""}`}>
+    <div className={`bg-card border rounded-xl px-4 py-3 ${locked ? "opacity-60" : ""}`}>
       <p className="text-xs text-muted-foreground mb-3 capitalize">{timeLabel()}</p>
 
       <div className="flex items-center gap-2">
@@ -92,7 +92,7 @@ export function PredictionCard({
       <div className="text-center mt-2 h-4">
         {locked && <p className="text-xs text-muted-foreground">🔒 Cerrado</p>}
         {!locked && isPending && <p className="text-xs text-muted-foreground">Guardando...</p>}
-        {!locked && !isPending && saved && <p className="text-xs text-green-600">✓ Guardado</p>}
+        {!locked && !isPending && saved && <p className="text-xs text-fg-success">✓ Guardado</p>}
       </div>
     </div>
   );

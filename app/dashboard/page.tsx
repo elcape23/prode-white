@@ -46,8 +46,8 @@ export default async function DashboardPage() {
   const myPredictions = await prisma.prediction.count({ where: { participantId: session.sub } });
 
   return (
-    <div className="min-h-screen bg-[var(--color-navy)] flex flex-col">
-      <header className="px-4 py-3 flex items-center justify-between text-white">
+    <div className="min-h-screen bg-background flex flex-col">
+      <header className="bg-fill-brand px-4 py-3 flex items-center justify-between text-white">
         <div>
           <p className="text-xs text-white/60">Hola,</p>
           <p className="font-bold">{session.name}</p>
@@ -60,32 +60,32 @@ export default async function DashboardPage() {
         </form>
       </header>
 
-      <main className="flex-1 bg-gray-50 rounded-t-3xl p-4 mt-2 space-y-4">
+      <main className="flex-1 bg-muted rounded-t-3xl p-4 mt-2 space-y-4">
         {/* Score card */}
-        <div className="bg-[var(--color-navy)] text-white rounded-xl p-5 text-center">
+        <div className="bg-surface-raised border rounded-xl p-5 text-center">
           {position > 0 ? (
             <>
-              <p className="text-xs text-white/60 uppercase tracking-widest">Tu posición</p>
-              <p className="text-5xl font-black mt-1">{position}°</p>
-              <p className="text-3xl font-black text-[var(--color-gold)] mt-2">{total} pts</p>
-              <div className="flex justify-center gap-4 mt-3 text-xs text-white/60">
+              <p className="text-xs text-fg-tertiary uppercase tracking-widest">Tu posición</p>
+              <p className="text-5xl font-black mt-1 text-fg-brand">{position}°</p>
+              <p className="text-3xl font-black text-fg-accent mt-2">{total} pts</p>
+              <div className="flex justify-center gap-4 mt-3 text-xs text-fg-tertiary">
                 <span>Partidos: {matchPoints} pts</span>
                 <span>Bonus: {bonusPoints} pts</span>
               </div>
             </>
           ) : (
             <>
-              <p className="text-xs text-white/60">Puntos</p>
-              <p className="text-5xl font-black mt-1">{total}</p>
+              <p className="text-xs text-fg-tertiary">Puntos</p>
+              <p className="text-5xl font-black mt-1 text-fg-default">{total}</p>
             </>
           )}
         </div>
 
         {/* Progress */}
         {totalMatches > 0 && (
-          <div className="bg-white border rounded-xl px-4 py-3 flex items-center justify-between">
+          <div className="bg-card border rounded-xl px-4 py-3 flex items-center justify-between">
             <span className="text-sm font-medium">Pronósticos cargados</span>
-            <span className={`font-black text-sm ${myPredictions === totalMatches ? "text-green-600" : "text-amber-600"}`}>
+            <span className={`font-black text-sm ${myPredictions === totalMatches ? "text-success" : "text-warning"}`}>
               {myPredictions}/{totalMatches}
             </span>
           </div>
@@ -94,21 +94,21 @@ export default async function DashboardPage() {
         {/* Nav grid */}
         <div className="grid grid-cols-2 gap-3">
           <Link href="/pronosticos"
-            className="bg-[var(--color-navy)] text-white rounded-xl p-4 flex flex-col gap-1">
+            className="bg-fill-brand text-white rounded-xl p-4 flex flex-col gap-1">
             <span className="text-2xl">⚽</span>
             <span className="font-bold text-sm">Pronósticos</span>
             <span className="text-xs text-white/60">Cargá tus predicciones</span>
           </Link>
           <Link href="/bonus"
-            className="bg-[var(--color-red)] text-white rounded-xl p-4 flex flex-col gap-1">
+            className="bg-destructive text-white rounded-xl p-4 flex flex-col gap-1">
             <span className="text-2xl">🏆</span>
             <span className="font-bold text-sm">Bonus</span>
             <span className="text-xs text-white/60">Campeón y finalistas</span>
           </Link>
           <Link href="/ranking"
-            className="border-2 border-[var(--color-navy)] rounded-xl p-4 flex flex-col gap-1 col-span-2">
+            className="border-2 border-primary rounded-xl p-4 flex flex-col gap-1 col-span-2">
             <span className="text-2xl">📊</span>
-            <span className="font-bold text-sm text-[var(--color-navy)]">Ranking General</span>
+            <span className="font-bold text-sm text-fg-brand">Ranking General</span>
           </Link>
         </div>
       </main>

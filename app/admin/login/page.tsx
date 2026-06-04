@@ -11,13 +11,13 @@ export default function AdminLoginPage() {
   const [state, action, pending] = useActionState(loginAdmin, undefined);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[var(--color-navy)] p-4">
-      <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-sm">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <div className="bg-card rounded-2xl shadow-xl p-8 w-full max-w-sm">
         <div className="text-center mb-6">
-          <div className="w-12 h-12 rounded-full bg-[var(--color-navy)] mx-auto flex items-center justify-center mb-3">
+          <div className="w-12 h-12 rounded-full bg-fill-brand mx-auto flex items-center justify-center mb-3">
             <span className="text-white font-black text-xl">W</span>
           </div>
-          <h1 className="text-xl font-black text-[var(--color-navy)]">Admin</h1>
+          <h1 className="text-xl font-black text-fg-brand">Admin</h1>
           <p className="text-sm text-muted-foreground">Prode White</p>
         </div>
 

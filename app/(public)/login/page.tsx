@@ -14,7 +14,7 @@ export default function LoginPage() {
   return (
     <div className="flex flex-col gap-6 py-4">
       <div className="text-center">
-        <h1 className="text-2xl font-black text-[var(--color-navy)] uppercase">
+        <h1 className="text-2xl font-black text-fg-brand uppercase">
           Ingresar
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
@@ -58,7 +58,7 @@ export default function LoginPage() {
 
       <p className="text-center text-sm text-muted-foreground">
         ¿Aún no te anotaste?{" "}
-        <Link href="/register" className="text-[var(--color-navy)] font-medium underline">
+        <Link href="/register" className="text-primary font-medium underline">
           Registrate acá
         </Link>
       </p>

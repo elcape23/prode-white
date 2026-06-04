@@ -30,7 +30,7 @@ export function ImportApiButton() {
       )}
       {state?.ok && (
         <Alert>
-          <AlertDescription className="text-green-700">
+          <AlertDescription className="text-fg-success">
             ✅ {state.count} partidos importados desde football-data.org
           </AlertDescription>
         </Alert>

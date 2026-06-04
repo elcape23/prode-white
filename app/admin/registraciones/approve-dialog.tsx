@@ -61,7 +61,7 @@ export function ApproveDialog({
     <>
       <Button
         size="sm"
-        className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+        className="flex-1 bg-success hover:bg-success/90 text-success-foreground"
         disabled={isPending}
         onClick={handleApprove}
       >
@@ -75,11 +75,11 @@ export function ApproveDialog({
           </DialogHeader>
 
           <div className="space-y-4 pt-2">
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
-              <p className="text-xs font-medium text-green-700 uppercase tracking-wide mb-1">
+            <div className="bg-surface-raised border rounded-lg p-4 text-center">
+              <p className="text-xs font-medium text-fg-success uppercase tracking-wide mb-1">
                 PIN generado
               </p>
-              <p className="text-3xl font-mono font-black text-green-800 tracking-widest">
+              <p className="text-3xl font-mono font-black text-fg-brand tracking-widest">
                 {pin}
               </p>
             </div>

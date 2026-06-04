@@ -45,8 +45,8 @@ export default async function RegistracionesPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-black text-[var(--color-navy)]">Inscripciones</h1>
-        <Badge variant="outline" className="text-amber-600 border-amber-300">
+        <h1 className="text-2xl font-black text-fg-brand">Inscripciones</h1>
+        <Badge variant="outline" className="text-fg-warning border-fg-warning/40">
           {byStatus.PENDING.length} pendientes
         </Badge>
       </div>
@@ -89,7 +89,7 @@ export default async function RegistracionesPage() {
               byStatus[status].map((p) => (
                 <div
                   key={p.id}
-                  className="border rounded-xl p-4 bg-white space-y-2"
+                  className="border rounded-xl p-4 bg-card space-y-2"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div>
@@ -111,7 +111,7 @@ export default async function RegistracionesPage() {
                     {p.sponsorCode && (
                       <>
                         <span className="text-muted-foreground">Sponsor</span>
-                        <span className="text-green-700 text-xs font-medium">
+                        <span className="text-fg-success text-xs font-medium">
                           {p.sponsorCode.sponsorName} ({p.sponsorCode.code})
                         </span>
                       </>
@@ -123,7 +123,7 @@ export default async function RegistracionesPage() {
                     {p.pin && (
                       <>
                         <span className="text-muted-foreground">PIN</span>
-                        <span className="font-mono font-black tracking-widest text-[var(--color-navy)]">
+                        <span className="font-mono font-black tracking-widest text-fg-brand">
                           {p.pin}
                         </span>
                       </>

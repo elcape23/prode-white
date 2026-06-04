@@ -30,7 +30,7 @@ export default async function FixturePage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-black text-[var(--color-navy)] uppercase">Fixture</h1>
+        <h1 className="text-2xl font-black text-fg-brand uppercase">Fixture</h1>
         <p className="text-sm text-muted-foreground">Mundial 2026</p>
       </div>
 
@@ -53,7 +53,7 @@ export default async function FixturePage() {
                 return (
                   <div
                     key={m.id}
-                    className="bg-white border rounded-xl px-4 py-3"
+                    className="bg-card border rounded-xl px-4 py-3"
                   >
                     {/* Date */}
                     <p className="text-xs text-muted-foreground mb-2 capitalize">
@@ -65,7 +65,7 @@ export default async function FixturePage() {
                       <span className="flex-1 text-right font-bold text-sm">{m.homeTeam}</span>
 
                       {hasResult ? (
-                        <span className="font-black text-lg text-[var(--color-navy)] min-w-[3rem] text-center">
+                        <span className="font-black text-lg text-fg-brand min-w-[3rem] text-center">
                           {m.homeScore}–{m.awayScore}
                         </span>
                       ) : (
@@ -82,11 +82,11 @@ export default async function FixturePage() {
                       {hasResult ? (
                         <Badge variant="secondary" className="text-xs">Finalizado</Badge>
                       ) : isUpcoming ? (
-                        <Badge variant="outline" className="text-xs text-green-600 border-green-300">
+                        <Badge variant="outline" className="text-xs text-fg-success border-success/40">
                           Próximo
                         </Badge>
                       ) : (
-                        <Badge variant="outline" className="text-xs text-amber-600 border-amber-300">
+                        <Badge variant="outline" className="text-xs text-fg-warning border-fg-warning/40">
                           En juego
                         </Badge>
                       )}

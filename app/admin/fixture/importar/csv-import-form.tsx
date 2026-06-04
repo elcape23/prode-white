@@ -50,7 +50,7 @@ export function CsvImportForm() {
     return (
       <div className="text-center py-8 space-y-4">
         <p className="text-5xl">✅</p>
-        <p className="text-xl font-bold text-green-700">
+        <p className="text-xl font-bold text-success">
           {state.count} partido{state.count !== 1 ? "s" : ""} importado{state.count !== 1 ? "s" : ""}
         </p>
         <Button onClick={() => router.push("/admin/fixture")} className="font-bold">

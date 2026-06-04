@@ -38,7 +38,7 @@ export default async function FixtureAdminPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-4 flex-wrap">
-        <h1 className="text-2xl font-black text-[var(--color-navy)]">Fixture</h1>
+        <h1 className="text-2xl font-black text-fg-brand">Fixture</h1>
         <div className="flex gap-2 flex-wrap">
           {matches.length > 0 && <ClearFixtureButton />}
           {matches.length > 0 && <SyncResultsButton />}
@@ -75,7 +75,7 @@ export default async function FixtureAdminPage() {
                 {roundMatches.map((m) => (
                   <div
                     key={m.id}
-                    className="bg-white border rounded-xl px-4 py-3 flex items-center gap-3"
+                    className="bg-card border rounded-xl px-4 py-3 flex items-center gap-3"
                   >
                     <div className="flex-1 min-w-0">
                       <p className="font-bold text-sm truncate">

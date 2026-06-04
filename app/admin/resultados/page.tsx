@@ -26,7 +26,7 @@ export default async function ResultadosPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-black text-[var(--color-navy)]">Resultados</h1>
+        <h1 className="text-2xl font-black text-fg-brand">Resultados</h1>
         <p className="text-sm text-muted-foreground">
           {withResult.length}/{matches.length} cargados
         </p>
@@ -35,7 +35,7 @@ export default async function ResultadosPage() {
       {/* Pending results (played but no result yet) */}
       {pending.length > 0 && (
         <div>
-          <h2 className="text-sm font-bold uppercase tracking-wider text-amber-600 mb-3">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-fg-warning mb-3">
             Por cargar ({pending.length})
           </h2>
           <div className="space-y-2">

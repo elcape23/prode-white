@@ -40,7 +40,7 @@ export function ResultForm({ match }: { match: Match }) {
   };
 
   return (
-    <div className="bg-white border rounded-xl px-4 py-3">
+    <div className="bg-card border rounded-xl px-4 py-3">
       <p className="text-xs text-muted-foreground mb-2 capitalize">{formatDate(match.scheduledAt)}</p>
       <div className="flex items-center gap-2">
         <span className="flex-1 text-right font-bold text-sm truncate">{match.homeTeam}</span>
