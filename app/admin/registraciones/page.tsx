@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ApproveDialog } from "./approve-dialog";
 import { RejectButton } from "./reject-button";
 import { DeleteButton } from "./delete-button";
+import { ReactivateButton } from "./reactivate-button";
 
 const STATUS_LABEL: Record<string, string> = {
   PENDING: "Pendiente",
@@ -143,6 +144,11 @@ export default async function RegistracionesPage() {
                   {status === "APPROVED" && (
                     <div className="flex justify-end pt-1">
                       <DeleteButton participantId={p.id} participantName={p.name} />
+                    </div>
+                  )}
+                  {status === "REJECTED" && (
+                    <div className="flex justify-end pt-1">
+                      <ReactivateButton participantId={p.id} />
                     </div>
                   )}
                 </div>

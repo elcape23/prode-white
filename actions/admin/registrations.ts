@@ -71,3 +71,16 @@ export async function rejectRegistration(
 
   return { success: "Participante rechazado." };
 }
+
+export async function reactivateRegistration(
+  participantId: string
+): Promise<AdminActionState> {
+  await verifyAdmin();
+
+  await prisma.participant.update({
+    where: { id: participantId },
+    data: { status: "PENDING" },
+  });
+
+  return { success: "Participante reactivado." };
+}
