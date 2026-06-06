@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Target, Trophy, BarChart3 } from "lucide-react";
+import { Home01Icon, Target01Icon, ChampionIcon, RankingIcon } from "hugeicons-react";
 import { cn } from "@/lib/utils";
 
 const items = [
-  { href: "/dashboard", icon: Home, label: "Inicio" },
-  { href: "/pronosticos", icon: Target, label: "Pronósticos" },
-  { href: "/bonus", icon: Trophy, label: "Bonus" },
-  { href: "/ranking", icon: BarChart3, label: "Ranking" },
+  { href: "/dashboard", icon: Home01Icon, label: "Inicio" },
+  { href: "/pronosticos", icon: Target01Icon, label: "Pronósticos" },
+  { href: "/bonus", icon: ChampionIcon, label: "Bonus" },
+  { href: "/ranking", icon: RankingIcon, label: "Ranking" },
 ];
 
 export function BottomNav() {
@@ -30,6 +30,7 @@ export function BottomNav() {
               )}
             >
               <Icon
+                size={20}
                 className="w-5 h-5"
                 strokeWidth={active ? 2.5 : 1.5}
               />

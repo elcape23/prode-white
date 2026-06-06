@@ -96,7 +96,8 @@
   /* ─── Typography ────────────────────────────────────────────── */
   --font-sans:    var(--font-sans);
   --font-mono:    var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-heading);
+  --font-display: var(--font-display);
 
   /* ─── Radius scale ──────────────────────────────────────────── */
   --radius-sm:  calc(var(--radius) * 0.6);
