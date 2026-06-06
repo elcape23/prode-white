@@ -1,8 +1,7 @@
 import { verifyParticipant } from "@/lib/dal";
 import prisma from "@/lib/prisma";
-import { logout } from "@/actions/auth";
-import { Logout03Icon } from "hugeicons-react";
 import { PronosticosClient } from "./pronosticos-client";
+import { Header } from "@/components/layout/header";
 import { teamNameEs } from "@/lib/flags";
 
 const TOURNAMENT_ID = "default-tournament";
@@ -89,40 +88,10 @@ export default async function PronosticosPage() {
 
   const total = matches.length;
   const filled = myPredictions.length;
-  const pct = total > 0 ? Math.round((filled / total) * 100) : 0;
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-background">
-      {/* Top bar */}
-      <header className="flex h-[120px] w-full items-end justify-between border-b border-border bg-card px-5 py-4">
-        <div className="flex flex-col justify-center text-fg-brand">
-          <p className="font-display text-2xl font-black leading-6 tracking-tight">2O26</p>
-          <p className="font-heading text-base font-black leading-4 tracking-wide">PRODE WHITE</p>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <div className="flex flex-col items-end gap-1">
-            <p className="text-[13px] tracking-tight text-fg-brand/40">
-              {filled}/{total}
-            </p>
-            <div className="h-1.5 w-[100px] overflow-hidden rounded-full bg-fg-brand/30">
-              <div
-                className="h-full rounded-full bg-fg-brand transition-all"
-                style={{ width: `${pct}%` }}
-              />
-            </div>
-          </div>
-          <form action={logout}>
-            <button
-              type="submit"
-              aria-label="Salir"
-              className="flex size-8 items-center justify-center rounded-full text-fg-tertiary transition-colors hover:bg-muted hover:text-fg-secondary"
-            >
-              <Logout03Icon size={18} className="text-fg-tertiary" strokeWidth={2} />
-            </button>
-          </form>
-        </div>
-      </header>
+      <Header filled={filled} total={total} />
 
       {/* Contenido */}
       {matches.length === 0 ? (

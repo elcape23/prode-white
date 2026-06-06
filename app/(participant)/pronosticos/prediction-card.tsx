@@ -133,16 +133,12 @@ export function MatchRow({
         </div>
       </div>
 
-      {/* Estado: solo bloqueo o guardado en curso */}
-      {(locked || isPending) && (
+      {/* Estado: solo bloqueo */}
+      {locked && (
         <div className="flex h-3 items-center justify-center">
-          {locked ? (
-            <span className="flex items-center gap-1 text-[11px] text-fg-tertiary">
-              <SquareLock02Icon size={12} strokeWidth={2} /> Cerrado
-            </span>
-          ) : (
-            <span className="text-[11px] text-fg-tertiary">Guardando…</span>
-          )}
+          <span className="flex items-center gap-1 text-[11px] text-fg-tertiary">
+            <SquareLock02Icon size={12} strokeWidth={2} /> Cerrado
+          </span>
         </div>
       )}
     </div>

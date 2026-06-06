@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home01Icon, Target01Icon, ChampionIcon, RankingIcon } from "hugeicons-react";
+import { Home01Icon, FootballPitchIcon, ChampionIcon, RankingIcon } from "hugeicons-react";
 import { cn } from "@/lib/utils";
 
 const items = [
   { href: "/dashboard", icon: Home01Icon, label: "Inicio" },
-  { href: "/pronosticos", icon: Target01Icon, label: "Pronósticos" },
+  { href: "/pronosticos", icon: FootballPitchIcon, label: "Pronósticos" },
   { href: "/bonus", icon: ChampionIcon, label: "Bonus" },
   { href: "/ranking", icon: RankingIcon, label: "Ranking" },
 ];
@@ -25,14 +25,14 @@ export function BottomNav() {
               key={href}
               href={href}
               className={cn(
-                "flex-1 flex flex-col items-center gap-0.5 py-2.5 text-xs font-medium transition-colors",
-                active ? "text-fg-brand" : "text-fg-tertiary hover:text-fg-secondary",
+                "flex-1 flex flex-col items-center gap-0.5 py-2.5 w-[80px] h-[80px] text-xs  transition-colors",
+                active ? "text-fg-brand font-medium" : "text-fg-tertiary hover:text-fg-secondary",
               )}
             >
               <Icon
                 size={20}
-                className="w-5 h-5"
-                strokeWidth={active ? 2.5 : 1.5}
+                className="w-6 h-6"
+                strokeWidth={active ? 2 : 1.5}
               />
               <span>{label}</span>
             </Link>
