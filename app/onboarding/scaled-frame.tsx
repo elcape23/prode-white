@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const DESIGN_WIDTH = 393;
+const DESIGN_WIDTH = 440;
 const DESIGN_HEIGHT = 852;
 
 /**

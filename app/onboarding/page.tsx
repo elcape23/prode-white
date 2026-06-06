@@ -81,9 +81,9 @@ export default function OnboardingPage() {
 
       {/* Lienzo 393×852 escalado para entrar en cualquier viewport */}
       <ScaledFrame>
-        <div className="relative h-[852px] w-[393px]">
+        <div className="relative h-[852px] w-full">
           {/* Container (layout exacto de Figma: pt-80 / pb-24 / px-20, gaps 40) */}
-          <div className="flex h-full flex-col items-center justify-between px-5 pb-6 pt-20">
+          <div className="flex h-full w-full flex-col items-center justify-between px-5 pb-6 pt-20">
             {/* Top: escudo + headline de premios */}
             <div className="flex w-full flex-col items-center gap-10">
               <Image
