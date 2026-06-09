@@ -21,7 +21,7 @@ export function ModalSheet({
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title: string;
-  description: string;
+  description?: string;
   children: React.ReactNode;
 }) {
   return (
@@ -69,12 +69,14 @@ export function ModalSheet({
             >
               {title}
             </DialogPrimitive.Title>
-            <DialogPrimitive.Description
-              data-slot="dialog-description"
-              className="text-base leading-5 tracking-tight text-fg-default"
-            >
-              {description}
-            </DialogPrimitive.Description>
+            {description ? (
+              <DialogPrimitive.Description
+                data-slot="dialog-description"
+                className="text-base leading-5 tracking-tight text-fg-default"
+              >
+                {description}
+              </DialogPrimitive.Description>
+            ) : null}
           </div>
 
           {children}

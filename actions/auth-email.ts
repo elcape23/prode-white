@@ -38,3 +38,30 @@ export async function registerWithEmail(
 
   redirect("/dashboard");
 }
+
+export async function loginWithEmail(
+  email: string,
+  password: string
+): Promise<{ error: string } | undefined> {
+  const normalizedEmail = email.trim().toLowerCase();
+
+  const participant = await prisma.participant.findUnique({
+    where: { email: normalizedEmail },
+  });
+  if (!participant || !participant.passwordHash) {
+    return { error: "Email o contraseña incorrectos." };
+  }
+
+  const valid = await bcrypt.compare(password, participant.passwordHash);
+  if (!valid) {
+    return { error: "Email o contraseña incorrectos." };
+  }
+
+  await createSession({
+    sub: participant.id,
+    role: "participant",
+    name: participant.name,
+  });
+
+  redirect("/dashboard");
+}

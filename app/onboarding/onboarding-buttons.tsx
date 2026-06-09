@@ -1,14 +1,13 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import Image from "next/image";
-
 import { Button } from "@/components/ui/button";
-import { registerWithEmail } from "@/actions/auth-email";
+import { loginWithEmail, registerWithEmail } from "@/actions/auth-email";
 import { EmailModal } from "./email-modal";
 import { PasswordModal } from "./password-modal";
+import { LoginModal } from "./login-modal";
 
-type Step = "none" | "email" | "password";
+type Step = "none" | "email" | "password" | "login";
 
 export function OnboardingButtons() {
   const [step, setStep] = useState<Step>("none");
@@ -27,20 +26,26 @@ export function OnboardingButtons() {
     });
   };
 
+  const handleLoginContinue = (loginEmail: string, password: string) => {
+    setStep("none");
+    setAuthError(null);
+    startTransition(async () => {
+      const result = await loginWithEmail(loginEmail, password);
+      if (result?.error) {
+        setAuthError(result.error);
+      }
+    });
+  };
+
   return (
     <div className="flex w-full flex-col items-stretch gap-2">
       <Button
         variant="outline"
         className="h-12 w-full rounded-full border-white bg-transparent text-base font-medium tracking-tight text-white hover:bg-white/10 hover:text-white"
+        onClick={() => setStep("login")}
+        disabled={isPending}
       >
-        <Image
-          src="/images/google-icon.svg"
-          alt=""
-          width={16}
-          height={16}
-          aria-hidden
-        />
-        Iniciar sesión con Google
+        Iniciar sesión
       </Button>
 
       <Button
@@ -68,6 +73,12 @@ export function OnboardingButtons() {
         open={step === "password"}
         onOpenChange={(open) => setStep(open ? "password" : "none")}
         onContinue={handlePasswordContinue}
+      />
+
+      <LoginModal
+        open={step === "login"}
+        onOpenChange={(open) => setStep(open ? "login" : "none")}
+        onContinue={handleLoginContinue}
       />
     </div>
   );
