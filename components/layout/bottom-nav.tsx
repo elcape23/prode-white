@@ -25,6 +25,12 @@ export function BottomNav() {
   const lastY = useRef(0);
 
   useEffect(() => {
+    window.scrollTo({ top: 0 });
+    lastY.current = 0;
+    setHidden(false);
+  }, [pathname]);
+
+  useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
       setHidden(y > lastY.current && y > 60);
