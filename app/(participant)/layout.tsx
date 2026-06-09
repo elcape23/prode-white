@@ -6,7 +6,7 @@ export default function ParticipantLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen flex-col pb-28 pt-[120px]">
+    <div className="flex min-h-dvh flex-col pb-[calc(7rem+env(safe-area-inset-bottom))] pt-[120px]">
       {children}
       <BottomNav />
     </div>

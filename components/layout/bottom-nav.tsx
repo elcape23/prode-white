@@ -41,7 +41,7 @@ export function BottomNav() {
   }, []);
 
   return (
-    <nav className={cn("fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-card px-5 pb-5 pt-2 transition-transform duration-300", hidden && "translate-y-full")}>
+    <nav className={cn("fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-card px-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-2 transition-transform duration-300", hidden && "translate-y-full")}>
       <div className="mx-auto flex max-w-lg items-center justify-between">
         {items.map(({ href, icon: Icon, label }) => {
           const active = pathname === href;
