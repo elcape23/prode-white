@@ -43,12 +43,14 @@ model SponsorCode {
 model Participant {
   id               String            @id @default(cuid())
   name             String
-  phone            String            @unique
+  email            String?           @unique
+  passwordHash     String?
+  phone            String?           @unique
   pin              String?
   status           ParticipantStatus @default(PENDING)
   sponsorCodeId    String?
-  paymentReference String
-  pricePaid        Int
+  paymentReference String?
+  pricePaid        Int?
   createdAt        DateTime          @default(now())
   approvedAt       DateTime?
   hasSeenWelcome   Boolean           @default(false)

@@ -1,19 +1,31 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
+import { registerWithEmail } from "@/actions/auth-email";
 import { EmailModal } from "./email-modal";
 import { PasswordModal } from "./password-modal";
 
 type Step = "none" | "email" | "password";
 
 export function OnboardingButtons() {
-  const router = useRouter();
   const [step, setStep] = useState<Step>("none");
   const [email, setEmail] = useState("");
+  const [authError, setAuthError] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
+
+  const handlePasswordContinue = (password: string) => {
+    setStep("none");
+    setAuthError(null);
+    startTransition(async () => {
+      const result = await registerWithEmail(email, password);
+      if (result?.error) {
+        setAuthError(result.error);
+      }
+    });
+  };
 
   return (
     <div className="flex w-full flex-col items-stretch gap-2">
@@ -34,11 +46,15 @@ export function OnboardingButtons() {
       <Button
         className="h-12 w-full rounded-full bg-white text-base font-medium tracking-tight text-[#001842] hover:bg-white/90"
         onClick={() => setStep("email")}
+        disabled={isPending}
       >
-        Sumarme al Prode
+        {isPending ? "Creando cuenta..." : "Sumarme al Prode"}
       </Button>
 
-      {/* Paso 1: email */}
+      {authError && (
+        <p className="text-center text-sm text-red-300">{authError}</p>
+      )}
+
       <EmailModal
         open={step === "email"}
         onOpenChange={(open) => setStep(open ? "email" : "none")}
@@ -48,14 +64,10 @@ export function OnboardingButtons() {
         }}
       />
 
-      {/* Paso 2: contraseña */}
       <PasswordModal
         open={step === "password"}
         onOpenChange={(open) => setStep(open ? "password" : "none")}
-        onContinue={() => {
-          setStep("none");
-          router.push(`/register?email=${encodeURIComponent(email)}`);
-        }}
+        onContinue={handlePasswordContinue}
       />
     </div>
   );

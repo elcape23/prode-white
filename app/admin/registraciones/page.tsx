@@ -104,10 +104,10 @@ export default async function RegistracionesPage() {
 
                   <div className="text-sm grid grid-cols-2 gap-x-4 gap-y-1">
                     <span className="text-muted-foreground">Pago ref.</span>
-                    <span className="truncate">{p.paymentReference}</span>
+                    <span className="truncate">{p.paymentReference ?? "—"}</span>
 
                     <span className="text-muted-foreground">Monto</span>
-                    <span className="font-medium">${p.pricePaid.toLocaleString("es-AR")}</span>
+                    <span className="font-medium">${(p.pricePaid ?? 0).toLocaleString("es-AR")}</span>
 
                     {p.sponsorCode && (
                       <>
@@ -136,7 +136,7 @@ export default async function RegistracionesPage() {
                       <ApproveDialog
                         participantId={p.id}
                         participantName={p.name}
-                        participantPhone={p.phone}
+                        participantPhone={p.phone ?? null}
                       />
                       <RejectButton participantId={p.id} />
                     </div>
