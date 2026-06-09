@@ -52,7 +52,7 @@ export default async function DashboardPage() {
           </div>
 
           <div className="relative flex h-full flex-1 flex-col items-start justify-between text-white">
-            <div className="flex flex-col items-start">
+            <div className="flex flex-col items-start pt-2">
               <p className="font-display text-[60px] font-black leading-[52px] tracking-tight">
                 {position > 0 ? position : "—"}
               </p>

@@ -28,7 +28,7 @@ export function Header({ filled, total, name }: HeaderProps) {
   const showAvatar = !showProgress && !!name;
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 flex h-[120px] w-full items-end justify-between border-b border-border bg-card px-5 py-4">
+    <header className="fixed left-0 right-0 top-0 z-50 flex h-[100px] w-full items-end justify-between border-b border-border bg-card px-5 py-4">
       <div className="flex flex-col justify-center text-fg-brand">
         <p className="font-display text-xl font-black leading-6 tracking-tight">2O26</p>
         <p className="font-display text-base font-black leading-4 tracking-wide">PRODE WHITE</p>
