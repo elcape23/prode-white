@@ -1,26 +1,19 @@
 import { verifyParticipant } from "@/lib/dal";
 import prisma from "@/lib/prisma";
+import { getParticipantRanking } from "@/lib/ranking";
 import Link from "next/link";
 import Image from "next/image";
 import { Header } from "@/components/layout/header";
 import { InscriptionHome } from "./inscription-home";
+import { WelcomeModal } from "./welcome-modal";
 
 export default async function DashboardPage() {
   const session = await verifyParticipant();
 
-  // Get participant with points
+  // Get participant (only metadata needed; puntos y posición vienen del
+  // ranking real compartido con la página de Ranking).
   const participant = await prisma.participant.findUnique({
     where: { id: session.sub },
-    include: {
-      predictions: {
-        select: { points: true },
-        where: { points: { not: null } },
-      },
-      bonusPredictions: {
-        select: { points: true },
-        where: { points: { not: null } },
-      },
-    },
   });
 
   const displayName = participant?.name ?? session.name;
@@ -32,47 +25,18 @@ export default async function DashboardPage() {
       <div className="flex flex-1 flex-col bg-background">
         <Header name={displayName} />
         <InscriptionHome />
+        {participant && !participant.hasSeenWelcome && <WelcomeModal />}
       </div>
     );
   }
 
-  const matchPoints =
-    participant?.predictions.reduce((s, p) => s + (p.points ?? 0), 0) ?? 0;
-  const bonusPoints =
-    participant?.bonusPredictions.reduce((s, p) => s + (p.points ?? 0), 0) ?? 0;
-  const total = matchPoints + bonusPoints;
-
-  // Get ranking position
-  const allApproved = await prisma.participant.findMany({
-    where: { status: "APPROVED" },
-    include: {
-      predictions: { select: { points: true } },
-      bonusPredictions: { select: { points: true } },
-    },
-  });
-
-  const ranked = allApproved
-    .map((p) => ({
-      id: p.id,
-      total:
-        p.predictions.reduce((s, pr) => s + (pr.points ?? 0), 0) +
-        p.bonusPredictions.reduce((s, bp) => s + (bp.points ?? 0), 0),
-    }))
-    .sort((a, b) => b.total - a.total);
-
-  const position = ranked.findIndex((p) => p.id === session.sub) + 1;
-
-  // Prediction completion
-  const totalMatches = await prisma.match.count({
-    where: { tournamentId: "default-tournament" },
-  });
-  const myPredictions = await prisma.prediction.count({
-    where: { participantId: session.sub },
-  });
+  // Posición y puntos reales, calculados con el mismo ranking que la página
+  // de Ranking para que el dato del card coincida exactamente.
+  const { position, total } = await getParticipantRanking(session.sub);
 
   return (
     <div className="flex flex-1 flex-col bg-background">
-      <Header filled={myPredictions} total={totalMatches} />
+      <Header name={displayName} />
 
       <main className="grid flex-1 grid-cols-2 content-start gap-2 bg-background p-5">
         {/* Hero — posición y puntos */}

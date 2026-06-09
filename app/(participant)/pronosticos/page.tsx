@@ -78,9 +78,14 @@ export default async function PronosticosPage() {
     if (!byKoRound.has(m.round)) byKoRound.set(m.round, []);
     byKoRound.get(m.round)!.push(toRow(m));
   }
+  // Nombres de display para rondas de eliminación que llegan en crudo de la API.
+  const ROUND_DISPLAY: Record<string, string> = {
+    LAST_32: "16vos",
+    LAST_16: "8vos",
+  };
   const koSections = [...byKoRound.entries()].map(([round, rows]) => ({
     kind: "round" as const,
-    title: round,
+    title: ROUND_DISPLAY[round] ?? round,
     matches: rows,
   }));
 

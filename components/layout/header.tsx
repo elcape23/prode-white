@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 type HeaderProps = {
   /** Pronósticos cargados (para la barra de progreso). Opcional. */
   filled?: number;
@@ -15,7 +17,11 @@ function initials(name: string): string {
   return letters.join("").toUpperCase();
 }
 
-/** Barra superior de la app: marca, progreso opcional o avatar. */
+/**
+ * Barra superior de la app: marca + progreso o avatar.
+ * El avatar enlaza a la página de cuenta (/cuenta). La barra de progreso solo
+ * se muestra en la pantalla de Pronósticos (cuando se pasan filled/total).
+ */
 export function Header({ filled, total, name }: HeaderProps) {
   const showProgress = typeof filled === "number" && typeof total === "number";
   const pct = showProgress && total! > 0 ? Math.round((filled! / total!) * 100) : 0;
@@ -44,11 +50,15 @@ export function Header({ filled, total, name }: HeaderProps) {
         )}
 
         {showAvatar && (
-          <div className="flex size-10 items-center justify-center rounded-full border border-border bg-fill-brand text-fg-on-brand">
+          <Link
+            href="/cuenta"
+            aria-label="Mi cuenta"
+            className="flex size-10 items-center justify-center rounded-full border border-border bg-fill-brand text-fg-on-brand transition-opacity hover:opacity-90"
+          >
             <span className="text-base font-semibold leading-5 tracking-tight">
               {initials(name!)}
             </span>
-          </div>
+          </Link>
         )}
       </div>
     </header>

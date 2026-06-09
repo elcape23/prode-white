@@ -55,7 +55,7 @@ function MatchdayAccordion({ title, groups }: { title: string; groups: GroupBloc
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex items-center justify-center gap-2.5 rounded-full bg-[color:var(--color-neutral-200)] px-5 py-2.5"
+        className="flex w-full items-center justify-center gap-2.5 rounded-full bg-[color:var(--color-neutral-200)] px-5 py-2.5"
       >
         <span className="text-base font-semibold tracking-tight text-foreground">
           {title}
@@ -78,10 +78,30 @@ function MatchdayAccordion({ title, groups }: { title: string; groups: GroupBloc
   );
 }
 
+/** Una fila con equipos sin definir ("Por definir") aún no es jugable. */
+const isPorDefinir = (m: MatchRowProps) =>
+  m.homeTeam === "Por definir" || m.awayTeam === "Por definir";
+const cardHasPorDefinir = (matches: MatchRowProps[]) => matches.some(isPorDefinir);
+
 export function PronosticosClient({ sections }: { sections: Section[] }) {
+  // Oculta las tarjetas cuyos partidos tengan equipos "Por definir".
+  const visibleSections = sections
+    .map((section) => {
+      if (section.kind === "round") return section;
+      return {
+        ...section,
+        groups: section.groups.filter((g) => !cardHasPorDefinir(g.matches)),
+      };
+    })
+    .filter((section) =>
+      section.kind === "round"
+        ? !cardHasPorDefinir(section.matches)
+        : section.groups.length > 0,
+    );
+
   return (
     <div className="flex w-full flex-1 flex-col items-center gap-8 p-5">
-      {sections.map((section) =>
+      {visibleSections.map((section) =>
         section.kind === "matchday" ? (
           <MatchdayAccordion key={section.title} title={section.title} groups={section.groups} />
         ) : (

@@ -7,17 +7,15 @@ import {
   FootballPitchIcon,
   Home01Icon,
   RankingIcon,
-  UserIcon,
 } from "hugeicons-react";
 import { cn } from "@/lib/utils";
 
 // Navbar inferior — full width con borde superior (Figma node 166:18200).
 const items = [
-  { href: "/bonus", icon: FootballIcon, label: "Bonus" },
-  { href: "/pronosticos", icon: FootballPitchIcon, label: "Pronósticos" },
   { href: "/dashboard", icon: Home01Icon, label: "Home" },
+  { href: "/pronosticos", icon: FootballPitchIcon, label: "Pronósticos" },
+  { href: "/bonus", icon: FootballIcon, label: "Bonus" },
   { href: "/ranking", icon: RankingIcon, label: "Ranking" },
-  { href: "/cuenta", icon: UserIcon, label: "Cuenta" },
 ];
 
 export function BottomNav() {

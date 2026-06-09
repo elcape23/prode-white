@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
+import { Prisma } from "@/generated/prisma/client";
 import { verifyParticipant } from "@/lib/dal";
 
 const LOCK_MINUTES = 30;
@@ -67,15 +68,21 @@ export async function saveBonusPredictions(
     "BEST_YOUNG_PLAYER",
   ] as const;
 
-  for (const position of positions) {
-    const teamName = (formData.get(position) as string)?.trim();
-    if (!teamName) continue;
+  try {
+    for (const position of positions) {
+      const teamName = (formData.get(position) as string)?.trim();
+      if (!teamName) continue;
 
-    await prisma.bonusPrediction.upsert({
-      where: { participantId_tournamentId_position: { participantId: session.sub, tournamentId: TOURNAMENT_ID, position } },
-      update: { teamName },
-      create: { participantId: session.sub, tournamentId: TOURNAMENT_ID, position, teamName },
-    });
+      await prisma.bonusPrediction.upsert({
+        where: { participantId_tournamentId_position: { participantId: session.sub, tournamentId: TOURNAMENT_ID, position } },
+        update: { teamName },
+        create: { participantId: session.sub, tournamentId: TOURNAMENT_ID, position, teamName },
+      });
+    }
+  } catch (e) {
+    const code = e instanceof Prisma.PrismaClientKnownRequestError ? e.code : "UNKNOWN";
+    console.error(`saveBonusPredictions [${code}]:`, e);
+    return { ok: false, error: "Error al guardar los pronósticos. Intentá de nuevo." };
   }
 
   revalidatePath("/bonus");

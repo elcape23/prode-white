@@ -15,7 +15,7 @@ const YOUNG_PLAYER_MIN_BIRTH_YEAR = 2005;
 export default async function BonusPage() {
   const session = await verifyParticipant();
 
-  const [bonus, matches, totalMatches, myPredictions, playerRows] = await Promise.all([
+  const [bonus, matches, playerRows] = await Promise.all([
     prisma.bonusPrediction.findMany({
       where: { participantId: session.sub, tournamentId: TOURNAMENT_ID },
       select: { position: true, teamName: true },
@@ -24,8 +24,6 @@ export default async function BonusPage() {
       where: { tournamentId: TOURNAMENT_ID },
       select: { homeTeam: true, awayTeam: true },
     }),
-    prisma.match.count({ where: { tournamentId: TOURNAMENT_ID } }),
-    prisma.prediction.count({ where: { participantId: session.sub } }),
     prisma.player.findMany({
       orderBy: { name: "asc" },
       select: { name: true, teamName: true, dateOfBirth: true },
@@ -108,7 +106,7 @@ export default async function BonusPage() {
 
   return (
     <div className="flex flex-1 flex-col bg-background">
-      <Header filled={myPredictions} total={totalMatches} />
+      <Header name={session.name} />
       <BonusForm
         initial={initial}
         countries={countries}
