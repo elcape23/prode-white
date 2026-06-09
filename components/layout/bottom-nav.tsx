@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import {
   FootballIcon,
   FootballPitchIcon,
@@ -20,9 +21,21 @@ const items = [
 
 export function BottomNav() {
   const pathname = usePathname();
+  const [hidden, setHidden] = useState(false);
+  const lastY = useRef(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      setHidden(y > lastY.current && y > 60);
+      lastY.current = y;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-card px-5 pb-5 pt-2">
+    <nav className={cn("fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-card px-5 pb-5 pt-2 transition-transform duration-300", hidden && "translate-y-full")}>
       <div className="mx-auto flex max-w-lg items-center justify-between">
         {items.map(({ href, icon: Icon, label }) => {
           const active = pathname === href;
