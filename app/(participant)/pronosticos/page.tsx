@@ -90,7 +90,7 @@ export default async function PronosticosPage() {
   const filled = myPredictions.length;
 
   return (
-    <div className="flex min-h-screen flex-col items-center bg-background">
+    <div className="flex flex-1 flex-col items-center bg-background">
       <Header filled={filled} total={total} />
 
       {/* Contenido */}

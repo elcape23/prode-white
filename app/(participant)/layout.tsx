@@ -6,7 +6,7 @@ export default function ParticipantLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="pb-28 pt-[120px]">
+    <div className="flex min-h-screen flex-col pb-28 pt-[120px]">
       {children}
       <BottomNav />
     </div>

@@ -58,7 +58,7 @@ export default async function DashboardPage() {
   });
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex flex-1 flex-col bg-background">
       <Header filled={myPredictions} total={totalMatches} />
 
       <main className="grid flex-1 grid-cols-2 content-start gap-2 bg-background p-5">

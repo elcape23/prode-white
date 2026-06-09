@@ -48,7 +48,7 @@ export default async function BonusPage() {
   countries.sort((a, b) => a.label.localeCompare(b.label, "es"));
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex flex-1 flex-col bg-background">
       <Header filled={myPredictions} total={totalMatches} />
       <BonusForm initial={initial} countries={countries} />
     </div>
