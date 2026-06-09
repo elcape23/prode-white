@@ -2,8 +2,8 @@ import { verifyParticipant } from "@/lib/dal";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 import Image from "next/image";
-import { ChampionIcon } from "hugeicons-react";
 import { Header } from "@/components/layout/header";
+import { InscriptionHome } from "./inscription-home";
 
 export default async function DashboardPage() {
   const session = await verifyParticipant();
@@ -22,6 +22,19 @@ export default async function DashboardPage() {
       },
     },
   });
+
+  const displayName = participant?.name ?? session.name;
+
+  // Usuarios que todavía no están dentro del juego (sin aprobar) ven la
+  // home de inscripción en vez del tablero de puntos. (Figma 252:5393)
+  if (!participant || participant.status !== "APPROVED") {
+    return (
+      <div className="flex flex-1 flex-col bg-background">
+        <Header name={displayName} />
+        <InscriptionHome />
+      </div>
+    );
+  }
 
   const matchPoints =
     participant?.predictions.reduce((s, p) => s + (p.points ?? 0), 0) ?? 0;

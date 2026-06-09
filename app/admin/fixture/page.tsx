@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { DeleteMatchButton } from "./delete-match-button";
 import { ClearFixtureButton } from "./clear-fixture-button";
 import { ImportApiButton } from "./import-api-button";
+import { ImportPlayersButton } from "./import-players-button";
 import { SyncResultsButton } from "./sync-results-button";
 
 const TOURNAMENT_ID = "default-tournament";
@@ -43,6 +44,7 @@ export default async function FixtureAdminPage() {
           {matches.length > 0 && <ClearFixtureButton />}
           {matches.length > 0 && <SyncResultsButton />}
           <ImportApiButton />
+          <ImportPlayersButton />
           <Link
             href="/admin/fixture/importar"
             className={cn(buttonVariants({ variant: "outline" }), "font-bold")}

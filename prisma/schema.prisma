@@ -126,3 +126,23 @@ model BonusPrediction {
 
   @@unique([participantId, tournamentId, position])
 }
+
+// ─── Players ──────────────────────────────────────────────────
+// Squads imported from football-data.org (/competitions/WC/teams).
+// Feeds the bonus prediction dropdowns (best player, top scorer,
+// best young player). Stored as a flat list; bonus picks reference
+// players by name to match the existing BonusPrediction.teamName field.
+
+model Player {
+  id          String    @id @default(cuid())
+  externalId  Int       @unique
+  name        String
+  position    String?
+  dateOfBirth DateTime?
+  nationality String?
+  teamName    String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([teamName])
+}
