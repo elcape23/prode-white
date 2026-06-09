@@ -1,11 +1,9 @@
 "use client";
 
 import { useActionState, useEffect, useState } from "react";
-import Link from "next/link";
 import { submitRegistration } from "@/actions/registration";
 import { GENERAL_PRICE, SPONSOR_PRICE } from "@/lib/sponsor-codes";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -19,7 +17,7 @@ type CodeStatus =
 
 export default function RegisterPage() {
   const [formState, action, pending] = useActionState(submitRegistration, undefined);
-  const err = formState && "error" in formState ? formState : null;
+  const err = formState;
   const [codeStatus, setCodeStatus] = useState<CodeStatus>({ state: "idle" });
   const [price, setPrice] = useState(GENERAL_PRICE);
 

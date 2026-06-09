@@ -1,35 +1,28 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { syncResultsFromApi } from "@/actions/admin/sync-results";
 import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { toast } from "sonner";
 
 export function SyncResultsButton() {
   const [state, action, pending] = useActionState(syncResultsFromApi, undefined);
 
-  return (
-    <div className="space-y-2">
-      <form action={action}>
-        <Button type="submit" variant="outline" disabled={pending} className="font-bold">
-          {pending ? "Sincronizando..." : "🔄 Sincronizar resultados"}
-        </Button>
-      </form>
+  useEffect(() => {
+    if (state?.ok) {
+      const msg = state.updated === 0
+        ? "Todo al día, sin cambios nuevos."
+        : `${state.updated} partido${state.updated !== 1 ? "s" : ""} actualizado${state.updated !== 1 ? "s" : ""} con resultados y puntos recalculados.`;
+      toast.success(msg);
+    }
+    if (state && !state.ok) toast.error(state.error);
+  }, [state]);
 
-      {state?.ok && (
-        <Alert>
-          <AlertDescription className="text-fg-success">
-            {state.updated === 0
-              ? "✅ Todo al día, sin cambios nuevos."
-              : `✅ ${state.updated} partido${state.updated !== 1 ? "s" : ""} actualizado${state.updated !== 1 ? "s" : ""} con resultados y puntos recalculados.`}
-          </AlertDescription>
-        </Alert>
-      )}
-      {state && !state.ok && (
-        <Alert variant="destructive">
-          <AlertDescription>{state.error}</AlertDescription>
-        </Alert>
-      )}
-    </div>
+  return (
+    <form action={action}>
+      <Button type="submit" variant="outline" disabled={pending} className="font-bold">
+        {pending ? "Sincronizando..." : "🔄 Sincronizar resultados"}
+      </Button>
+    </form>
   );
 }

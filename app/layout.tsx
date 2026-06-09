@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
+import { PageTransitionLoader } from "@/components/layout/page-transition-loader";
+import { Toaster } from "@/components/ui/sonner";
 
 // Cuerpo de texto.
 const inter = Inter({
@@ -50,7 +52,11 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${geistMono.variable} ${fwc2026.variable} ${fwc2026Expanded.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col" suppressHydrationWarning>{children}</body>
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
+        <PageTransitionLoader />
+        {children}
+        <Toaster />
+      </body>
     </html>
   );
 }

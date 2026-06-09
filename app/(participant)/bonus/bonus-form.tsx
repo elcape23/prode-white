@@ -1,12 +1,12 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import Image from "next/image";
 import { saveBonusPredictions } from "@/actions/predictions";
 import { teamNameShort } from "@/lib/flags";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { toast } from "sonner";
 import {
   Select,
   SelectContent,
@@ -49,6 +49,12 @@ export function BonusForm({
   featuredYoung: PlayerOption[];
 }) {
   const [state, action, pending] = useActionState(saveBonusPredictions, undefined);
+
+  useEffect(() => {
+    if (state?.ok) toast.success("Pronósticos guardados correctamente.");
+    if (state && !state.ok) toast.error(state.error);
+  }, [state]);
+
   const [values, setValues] = useState<Record<string, string>>(
     Object.fromEntries(FIELDS.map(({ key }) => [key, initial[key] ?? ""]))
   );
@@ -57,19 +63,6 @@ export function BonusForm({
 
   return (
     <form action={action} className="flex flex-1 flex-col gap-6 bg-background p-5">
-      {state?.ok && (
-        <Alert>
-          <AlertDescription className="font-medium text-fg-success">
-            Pronósticos guardados correctamente.
-          </AlertDescription>
-        </Alert>
-      )}
-      {state && !state.ok && (
-        <Alert variant="destructive">
-          <AlertDescription>{state.error}</AlertDescription>
-        </Alert>
-      )}
-
       {FIELDS.map(({ key, label, placeholder, type }) => {
         const playerOptions =
           type === "player" ? players : type === "youngPlayer" ? youngPlayers : [];

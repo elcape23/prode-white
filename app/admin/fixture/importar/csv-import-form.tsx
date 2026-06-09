@@ -1,10 +1,11 @@
 "use client";
 
-import { useActionState, useRef, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { importFixtureCSV } from "@/actions/admin/fixture";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { toast } from "sonner";
 import { parseFixtureCSV } from "@/lib/csv-parser";
 
 type PreviewRow = { round: string; homeTeam: string; awayTeam: string; scheduledAt: string };
@@ -15,6 +16,14 @@ export function CsvImportForm() {
   const [preview, setPreview] = useState<PreviewRow[] | null>(null);
   const [parseError, setParseError] = useState("");
   const [state, action, pending] = useActionState(importFixtureCSV, undefined);
+
+  useEffect(() => {
+    if (state?.ok) {
+      toast.success(`${state.count} partido${state.count !== 1 ? "s" : ""} importado${state.count !== 1 ? "s" : ""}`);
+      router.push("/admin/fixture");
+    }
+    if (state && !state.ok) toast.error(state.error);
+  }, [state, router]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -45,20 +54,6 @@ export function CsvImportForm() {
     };
     reader.readAsText(file);
   };
-
-  if (state?.ok) {
-    return (
-      <div className="text-center py-8 space-y-4">
-        <p className="text-5xl">✅</p>
-        <p className="text-xl font-bold text-success">
-          {state.count} partido{state.count !== 1 ? "s" : ""} importado{state.count !== 1 ? "s" : ""}
-        </p>
-        <Button onClick={() => router.push("/admin/fixture")} className="font-bold">
-          Ver fixture
-        </Button>
-      </div>
-    );
-  }
 
   return (
     <form action={action} className="space-y-4">

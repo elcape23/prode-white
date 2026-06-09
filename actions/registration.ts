@@ -1,6 +1,8 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
+import { createSession } from "@/lib/session";
 import {
   SPONSOR_CODES,
   GENERAL_PRICE,
@@ -9,7 +11,6 @@ import {
 } from "@/lib/sponsor-codes";
 
 export type RegistrationState =
-  | { success: true; name: string; phone: string; price: number; paymentReference: string }
   | { error: string; field?: string }
   | undefined;
 
@@ -66,7 +67,7 @@ export async function submitRegistration(
     pricePaid = SPONSOR_PRICE;
   }
 
-  await prisma.participant.create({
+  const participant = await prisma.participant.create({
     data: {
       name,
       phone,
@@ -77,7 +78,8 @@ export async function submitRegistration(
     },
   });
 
-  return { success: true, name, phone, price: pricePaid, paymentReference };
+  await createSession({ sub: participant.id, role: "participant", name: participant.name });
+  redirect("/dashboard");
 }
 
 export async function validateSponsorCode(code: string): Promise<{
