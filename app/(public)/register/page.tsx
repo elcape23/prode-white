@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState, useEffect, useState } from "react";
 import { submitRegistration } from "@/actions/registration";
 import { GENERAL_PRICE, SPONSOR_PRICE } from "@/lib/sponsor-codes";
@@ -59,26 +60,6 @@ export default function RegisterPage() {
     setCodeStatus({ state: "idle" });
     setPrice(GENERAL_PRICE);
   }, []);
-
-  if (formState && "success" in formState) {
-    return (
-      <div className="flex flex-col items-center gap-6 py-8 text-center">
-        <div className="w-16 h-16 rounded-full bg-success/10 flex items-center justify-center">
-          <span className="text-3xl">✅</span>
-        </div>
-        <div>
-          <h2 className="text-xl font-bold text-fg-brand">¡Solicitud enviada!</h2>
-          <p className="text-muted-foreground mt-2 text-sm">
-            Tu inscripción está <strong>pendiente de aprobación</strong>. Una vez que
-            confirmemos tu pago te enviamos el PIN de acceso por WhatsApp.
-          </p>
-        </div>
-        <Link href="/" className={cn(buttonVariants({ variant: "outline" }), "w-full flex items-center justify-center")}>
-          Volver al inicio
-        </Link>
-      </div>
-    );
-  }
 
   return (
     <div className="flex flex-col gap-6 py-4">
