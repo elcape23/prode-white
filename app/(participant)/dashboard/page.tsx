@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Header } from "@/components/layout/header";
 import { InscriptionHome } from "./inscription-home";
+import { PaymentOnboardingModal } from "./payment-onboarding-modal";
 
 export default async function DashboardPage() {
   const session = await verifyParticipant();
@@ -17,6 +18,10 @@ export default async function DashboardPage() {
 
   const displayName = participant?.name ?? session.name;
 
+  // El modal de onboarding de pago aparece automáticamente la primera vez
+  // que cualquier participante entra al dashboard (todos requieren aprobación).
+  const showOnboarding = !!participant && !participant.hasSeenWelcome;
+
   // Usuarios que todavía no están dentro del juego (sin aprobar) ven la
   // home de inscripción en vez del tablero de puntos. (Figma 252:5393)
   if (!participant || participant.status !== "APPROVED") {
@@ -24,6 +29,7 @@ export default async function DashboardPage() {
       <div className="flex flex-1 flex-col bg-background">
         <Header name={displayName} />
         <InscriptionHome />
+        {showOnboarding && <PaymentOnboardingModal />}
       </div>
     );
   }
@@ -121,6 +127,7 @@ export default async function DashboardPage() {
           wide
         />
       </main>
+      {showOnboarding && <PaymentOnboardingModal />}
     </div>
   );
 }
