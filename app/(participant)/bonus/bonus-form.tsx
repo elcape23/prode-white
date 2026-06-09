@@ -91,7 +91,7 @@ export function BonusForm({
             </div>
             <div className="bg-card p-3 rounded-b-2xl">
               {type === "country" ? (
-                <Select name={key} defaultValue={initial[key] ?? undefined} onValueChange={set(key)}>
+                <Select name={key} defaultValue={initial[key] ?? undefined} onValueChange={(v) => set(key)(v ?? "")}>
                   <SelectTrigger className="h-10! w-full rounded-md text-sm">
                     <SelectValue placeholder={placeholder}>
                       {(value: string) => {
