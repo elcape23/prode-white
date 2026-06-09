@@ -291,6 +291,26 @@
   --sidebar-ring:              var(--neutral-500);
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   TOAST (Sonner) semantic tokens
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  --toast-success-bg:     oklch(0.97 0.03 145);
+  --toast-success-text:   oklch(0.40 0.16 145);
+  --toast-success-border: oklch(0.88 0.07 145);
+  --toast-error-bg:       oklch(0.97 0.03 27);
+  --toast-error-text:     oklch(0.46 0.22 27);
+  --toast-error-border:   oklch(0.88 0.08 27);
+}
+.dark {
+  --toast-success-bg:     oklch(0.20 0.04 145);
+  --toast-success-text:   oklch(0.65 0.16 145);
+  --toast-success-border: oklch(0.30 0.06 145);
+  --toast-error-bg:       oklch(0.20 0.04 27);
+  --toast-error-text:     oklch(0.704 0.191 22.216);
+  --toast-error-border:   oklch(0.30 0.07 27);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
