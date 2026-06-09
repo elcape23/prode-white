@@ -22,12 +22,9 @@ export function calculateMatchPoints(
 
 export type BonusResults = {
   champion: string | null;
-  finalist1: string | null;
-  finalist2: string | null;
-  semi1: string | null;
-  semi2: string | null;
-  semi3: string | null;
-  semi4: string | null;
+  bestPlayer: string | null;
+  topScorer: string | null;
+  bestYoungPlayer: string | null;
 };
 
 export function calculateBonusPoints(
@@ -38,14 +35,12 @@ export function calculateBonusPoints(
   switch (position) {
     case "CHAMPION":
       return teamName === results.champion ? 15 : 0;
-    case "FINALIST_1":
-    case "FINALIST_2":
-      return [results.finalist1, results.finalist2].includes(teamName) ? 10 : 0;
-    case "SEMI_1":
-    case "SEMI_2":
-    case "SEMI_3":
-    case "SEMI_4":
-      return [results.semi1, results.semi2, results.semi3, results.semi4].includes(teamName) ? 5 : 0;
+    case "BEST_PLAYER":
+      return teamName === results.bestPlayer ? 10 : 0;
+    case "TOP_SCORER":
+      return teamName === results.topScorer ? 10 : 0;
+    case "BEST_YOUNG_PLAYER":
+      return teamName === results.bestYoungPlayer ? 5 : 0;
     default:
       return 0;
   }

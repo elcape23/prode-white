@@ -2,22 +2,30 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home01Icon, FootballPitchIcon, ChampionIcon, RankingIcon } from "hugeicons-react";
+import {
+  FootballIcon,
+  FootballPitchIcon,
+  Home01Icon,
+  RankingIcon,
+  UserIcon,
+} from "hugeicons-react";
 import { cn } from "@/lib/utils";
 
+// Navbar inferior — full width con borde superior (Figma node 166:18200).
 const items = [
-  { href: "/dashboard", icon: Home01Icon, label: "Inicio" },
+  { href: "/bonus", icon: FootballIcon, label: "Bonus" },
   { href: "/pronosticos", icon: FootballPitchIcon, label: "Pronósticos" },
-  { href: "/bonus", icon: ChampionIcon, label: "Bonus" },
+  { href: "/dashboard", icon: Home01Icon, label: "Home" },
   { href: "/ranking", icon: RankingIcon, label: "Ranking" },
+  { href: "/cuenta", icon: UserIcon, label: "Cuenta" },
 ];
 
 export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-surface-raised border-t border-border z-50">
-      <div className="max-w-lg mx-auto flex">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-card px-5 pb-5 pt-2">
+      <div className="mx-auto flex max-w-lg items-center justify-between">
         {items.map(({ href, icon: Icon, label }) => {
           const active = pathname === href;
           return (
@@ -25,16 +33,16 @@ export function BottomNav() {
               key={href}
               href={href}
               className={cn(
-                "flex-1 flex flex-col items-center gap-0.5 py-2.5 w-[80px] h-[80px] text-xs  transition-colors",
-                active ? "text-fg-brand font-medium" : "text-fg-tertiary hover:text-fg-secondary",
+                "flex size-15 flex-col items-center justify-center gap-2 text-center text-[13px] leading-4 tracking-[-0.13px] transition-colors",
+                active
+                  ? "font-medium text-fg-brand"
+                  : "font-normal text-fg-secondary hover:text-fg-default",
               )}
             >
-              <Icon
-                size={20}
-                className="w-6 h-6"
-                strokeWidth={active ? 2 : 1.5}
-              />
-              <span>{label}</span>
+              <span className="flex size-7 items-center justify-center p-0.5">
+                <Icon size={24} strokeWidth={active ? 2 : 1.5} />
+              </span>
+              <span className="whitespace-nowrap">{label}</span>
             </Link>
           );
         })}

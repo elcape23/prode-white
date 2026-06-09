@@ -50,7 +50,7 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${geistMono.variable} ${fwc2026.variable} ${fwc2026Expanded.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col w-full" suppressHydrationWarning>{children}</body>
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>{children}</body>
     </html>
   );
 }

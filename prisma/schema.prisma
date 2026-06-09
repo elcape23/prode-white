@@ -20,12 +20,9 @@ enum ParticipantStatus {
 
 enum BonusPosition {
   CHAMPION
-  FINALIST_1
-  FINALIST_2
-  SEMI_1
-  SEMI_2
-  SEMI_3
-  SEMI_4
+  BEST_PLAYER
+  TOP_SCORER
+  BEST_YOUNG_PLAYER
 }
 
 // ─── Sponsor Codes ────────────────────────────────────────────
@@ -66,13 +63,10 @@ model Tournament {
   id           String    @id @default(cuid())
   name         String
   firstMatchAt DateTime?
-  champion     String?
-  finalist1    String?
-  finalist2    String?
-  semi1        String?
-  semi2        String?
-  semi3        String?
-  semi4        String?
+  champion       String?
+  bestPlayer     String?
+  topScorer      String?
+  bestYoungPlayer String?
   createdAt    DateTime  @default(now())
 
   matches          Match[]

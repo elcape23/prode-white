@@ -1,4 +1,4 @@
-import { BottomNavPill } from "@/components/layout/bottom-nav-pill";
+import { BottomNav } from "@/components/layout/bottom-nav";
 
 export default function ParticipantLayout({
   children,
@@ -6,9 +6,9 @@ export default function ParticipantLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="pb-24">
+    <div className="pb-28 pt-[120px]">
       {children}
-      <BottomNavPill />
+      <BottomNav />
     </div>
   );
 }

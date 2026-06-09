@@ -62,8 +62,9 @@ export async function saveBonusPredictions(
 
   const positions = [
     "CHAMPION",
-    "FINALIST_1", "FINALIST_2",
-    "SEMI_1", "SEMI_2", "SEMI_3", "SEMI_4",
+    "BEST_PLAYER",
+    "TOP_SCORER",
+    "BEST_YOUNG_PLAYER",
   ] as const;
 
   for (const position of positions) {

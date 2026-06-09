@@ -1,7 +1,7 @@
 import Image from "next/image";
-import Link from "next/link";
 import type { Metadata } from "next";
 import { ScaledFrame } from "./scaled-frame";
+import { OnboardingButtons } from "./onboarding-buttons";
 
 export const metadata: Metadata = {
   title: "Sumate al Prode — Las White F.C.",
@@ -106,27 +106,7 @@ export default function OnboardingPage() {
 
             {/* Bottom: CTAs + caption */}
             <div className="flex w-full flex-col items-center gap-10">
-              <div className="flex w-full flex-col items-stretch gap-2">
-                <button
-                  type="button"
-                  className="flex h-12 w-full items-center justify-center gap-2 rounded-full border border-white p-3 text-base font-medium tracking-tight text-white transition-colors hover:bg-white/10"
-                >
-                  <Image
-                    src="/images/google-icon.svg"
-                    alt=""
-                    width={16}
-                    height={16}
-                    aria-hidden
-                  />
-                  Iniciar sesión con Google
-                </button>
-                <Link
-                  href="/register"
-                  className="flex h-12 w-full items-center justify-center rounded-full bg-white p-3 text-base font-medium tracking-tight text-[#001842] transition-colors hover:bg-white/90"
-                >
-                  Sumarme al Prode
-                </Link>
-              </div>
+              <OnboardingButtons />
               <p className="w-full text-center text-[13px] leading-[18px] text-white/60">
                 Prode oficial de Las White F.C.
               </p>

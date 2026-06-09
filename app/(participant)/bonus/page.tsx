@@ -1,90 +1,56 @@
-"use client";
+import { verifyParticipant } from "@/lib/dal";
+import prisma from "@/lib/prisma";
+import { Header } from "@/components/layout/header";
+import { flagSrc, teamNameEs, FLAG_SLUGS } from "@/lib/flags";
+import { BonusForm, type Country } from "./bonus-form";
 
-import { useActionState, useState } from "react";
-import { saveBonusPredictions } from "@/actions/predictions";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+const TOURNAMENT_ID = "default-tournament";
 
-// This page is protected by proxy.ts (requires participant session)
-// We use a client component with useActionState for the form
-export default function BonusPage() {
-  return <BonusForm />;
-}
+export default async function BonusPage() {
+  const session = await verifyParticipant();
 
-function BonusForm() {
-  const [state, action, pending] = useActionState(saveBonusPredictions, undefined);
+  const [bonus, matches, totalMatches, myPredictions] = await Promise.all([
+    prisma.bonusPrediction.findMany({
+      where: { participantId: session.sub, tournamentId: TOURNAMENT_ID },
+      select: { position: true, teamName: true },
+    }),
+    prisma.match.findMany({
+      where: { tournamentId: TOURNAMENT_ID },
+      select: { homeTeam: true, awayTeam: true },
+    }),
+    prisma.match.count({ where: { tournamentId: TOURNAMENT_ID } }),
+    prisma.prediction.count({ where: { participantId: session.sub } }),
+  ]);
 
-  const fields: { key: string; label: string; points: string }[] = [
-    { key: "CHAMPION",    label: "Campeón",         points: "+15 pts" },
-    { key: "FINALIST_1",  label: "Finalista 1",     points: "+10 pts" },
-    { key: "FINALIST_2",  label: "Finalista 2",     points: "+10 pts" },
-    { key: "SEMI_1",      label: "Semifinalista 1", points: "+5 pts" },
-    { key: "SEMI_2",      label: "Semifinalista 2", points: "+5 pts" },
-    { key: "SEMI_3",      label: "Semifinalista 3", points: "+5 pts" },
-    { key: "SEMI_4",      label: "Semifinalista 4", points: "+5 pts" },
-  ];
+  const initial = Object.fromEntries(bonus.map((b) => [b.position, b.teamName]));
+
+  // Países participantes según el fixture importado de la API. Solo se incluyen
+  // equipos que resuelven a una bandera conocida (se descartan "Por definir", etc.).
+  const seen = new Set<string>();
+  const countries: Country[] = [];
+  for (const name of matches.flatMap((m) => [m.homeTeam, m.awayTeam])) {
+    const flag = flagSrc(name);
+    if (!flag) continue;
+    const label = teamNameEs(name);
+    if (seen.has(label)) continue;
+    seen.add(label);
+    countries.push({ value: label, label, flag });
+  }
+
+  // Fallback: si todavía no se importó el fixture, listamos todos los países disponibles.
+  if (countries.length === 0) {
+    for (const slug of FLAG_SLUGS) {
+      const label = teamNameEs(slug);
+      countries.push({ value: label, label, flag: `/flags/${slug}.svg` });
+    }
+  }
+
+  countries.sort((a, b) => a.label.localeCompare(b.label, "es"));
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <header className="bg-fill-brand px-4 py-3 text-white">
-        <p className="text-xs text-white/60">Pronósticos Bonus</p>
-        <p className="font-bold">Antes del primer partido</p>
-      </header>
-
-      <main className="flex-1 bg-muted rounded-t-3xl p-4 mt-2">
-        <div className="space-y-4">
-          <div className="bg-surface-raised border rounded-xl p-4 text-sm">
-            <p className="font-bold mb-1 text-fg-default">¿Cómo funcionan?</p>
-            <p className="text-fg-secondary text-xs">
-              Elegí el campeón, finalistas y semifinalistas. Se cierran cuando empiece el primer partido.
-              No importa el orden — si acertás el equipo en cualquier posición, sumás los puntos.
-            </p>
-          </div>
-
-          {state?.ok && (
-            <Alert>
-              <AlertDescription className="text-fg-success font-medium">
-                ✅ Pronósticos guardados correctamente.
-              </AlertDescription>
-            </Alert>
-          )}
-          {state && !state.ok && (
-            <Alert variant="destructive">
-              <AlertDescription>{state.error}</AlertDescription>
-            </Alert>
-          )}
-
-          <form action={action} className="space-y-3">
-            {fields.map(({ key, label, points }) => (
-              <div key={key} className="bg-card border rounded-xl px-4 py-3">
-                <div className="flex items-center justify-between mb-1.5">
-                  <Label htmlFor={key} className="font-bold text-sm">{label}</Label>
-                  <span className="text-xs font-bold text-accent bg-fill-brand px-2 py-0.5 rounded-full">
-                    {points}
-                  </span>
-                </div>
-                <Input
-                  id={key}
-                  name={key}
-                  placeholder="Nombre del equipo"
-                  className="text-sm"
-                  disabled={pending}
-                />
-              </div>
-            ))}
-
-            <Button
-              type="submit"
-              disabled={pending}
-              className="w-full h-12 font-bold text-base"
-            >
-              {pending ? "Guardando..." : "Guardar pronósticos bonus"}
-            </Button>
-          </form>
-        </div>
-      </main>
+    <div className="flex min-h-screen flex-col bg-background">
+      <Header filled={myPredictions} total={totalMatches} />
+      <BonusForm initial={initial} countries={countries} />
     </div>
   );
 }
