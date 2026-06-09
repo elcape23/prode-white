@@ -5,7 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { Header } from "@/components/layout/header";
 import { InscriptionHome } from "./inscription-home";
-import { WelcomeModal } from "./welcome-modal";
 
 export default async function DashboardPage() {
   const session = await verifyParticipant();
@@ -25,7 +24,6 @@ export default async function DashboardPage() {
       <div className="flex flex-1 flex-col bg-background">
         <Header name={displayName} />
         <InscriptionHome />
-        {participant && !participant.hasSeenWelcome && <WelcomeModal />}
       </div>
     );
   }
