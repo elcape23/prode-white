@@ -36,7 +36,7 @@ export function PageTransitionLoader() {
   if (!loading) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-transparent pointer-events-none">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/15 pointer-events-none">
       <div className="h-10 w-10 animate-spin rounded-full border-[3px] border-navy/20 border-t-navy" />
     </div>
   );
