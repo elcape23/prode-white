@@ -301,7 +301,11 @@
   html {
     @apply font-sans;
   }
-  input, select, textarea {
-    font-size: max(16px, 1em);
-  }
+}
+
+/* Unlayered — beats all Tailwind utility layers, prevents iOS zoom on input focus */
+input,
+select,
+textarea {
+  font-size: max(16px, 1em);
 }
