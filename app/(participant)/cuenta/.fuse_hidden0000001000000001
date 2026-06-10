@@ -94,11 +94,7 @@ export default async function CuentaPage() {
         </div>
 
         <form action={logout} className="mt-auto pt-5">
-          <Button
-            type="submit"
-            variant="destructive"
-            className="h-12 w-full rounded-full bg-destructive text-base font-medium text-white hover:bg-destructive/90"
-          >
+          <Button type="submit" variant="destructive" className="w-full rounded-full">
             Cerrar Sesión
           </Button>
         </form>
