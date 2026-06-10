@@ -52,7 +52,7 @@ export function PasswordModal({
               minLength={MIN_LENGTH}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="hincha@prodewhite.com"
+              placeholder=""
               aria-invalid={tooShort}
               className="h-12 rounded-2xl px-4 pr-11 text-base"
             />
@@ -85,7 +85,7 @@ export function PasswordModal({
               required
               value={repeat}
               onChange={(e) => setRepeat(e.target.value)}
-              placeholder="hincha@prodewhite.com"
+              placeholder=""
               aria-invalid={mismatch}
               className={cn("h-12 rounded-2xl px-4 pr-11 text-base", mismatch && "border-destructive")}
             />
