@@ -21,9 +21,6 @@ export default function PublicLayout({
             <Link href="/ranking" className="text-fg-secondary hover:text-fg-default transition-colors">
               Ranking
             </Link>
-            <Link href="/login" className="text-fg-secondary hover:text-fg-default transition-colors">
-              Ingresar
-            </Link>
           </nav>
         </div>
       </header>

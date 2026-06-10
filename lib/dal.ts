@@ -6,7 +6,7 @@ import { getSession, type SessionPayload } from "@/lib/session";
 export const verifySession = cache(async (): Promise<SessionPayload> => {
   const session = await getSession();
   if (!session) {
-    redirect("/login");
+    redirect("/onboarding");
   }
   return session;
 });
@@ -22,7 +22,7 @@ export const verifyAdmin = cache(async (): Promise<SessionPayload> => {
 export const verifyParticipant = cache(async (): Promise<SessionPayload> => {
   const session = await getSession();
   if (!session || session.role !== "participant") {
-    redirect("/login");
+    redirect("/onboarding");
   }
   return session;
 });

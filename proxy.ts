@@ -16,7 +16,7 @@ export function proxy(request: NextRequest) {
       pathname.startsWith("/pronosticos") ||
       pathname.startsWith("/bonus")
     ) {
-      return NextResponse.redirect(new URL("/login", request.url));
+      return NextResponse.redirect(new URL("/onboarding", request.url));
     }
   }
 
