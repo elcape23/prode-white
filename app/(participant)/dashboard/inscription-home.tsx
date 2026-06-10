@@ -1,4 +1,14 @@
+"use client";
+
+import { useState, useTransition } from "react";
 import Image from "next/image";
+import { toast } from "sonner";
+
+import { requestAccess } from "@/actions/access-request";
+
+const WHATSAPP_NUMBER = "+5493814090778";
+const WHATSAPP_RECEIPT_MSG =
+  "Hola, te envío el comprobante de pago de mi inscripción al Prode.";
 
 /**
  * Home para usuarios que todavía no están dentro del juego (status ≠ APPROVED).
@@ -6,6 +16,26 @@ import Image from "next/image";
  * Tarjeta de Inscripción + CTAs "Enviar Comprobante" / "Solicitar acceso".
  */
 export function InscriptionHome({ amount = "$10.000" }: { amount?: string }) {
+  const [accessRequested, setAccessRequested] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
+  const handleSendReceipt = () => {
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_RECEIPT_MSG)}`;
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
+  const handleRequestAccess = () => {
+    startTransition(async () => {
+      const result = await requestAccess();
+      if (result.ok) {
+        setAccessRequested(true);
+        toast.success("Solicitud enviada. El admin generará tu PIN en breve.");
+      } else {
+        toast.error(result.error ?? "No se pudo enviar la solicitud.");
+      }
+    });
+  };
+
   return (
     <main className="flex flex-1 flex-col justify-end gap-6 bg-background p-5">
       {/* Tarjeta de inscripción */}
@@ -43,15 +73,22 @@ export function InscriptionHome({ amount = "$10.000" }: { amount?: string }) {
       <div className="flex w-full flex-col items-start justify-end gap-2">
         <button
           type="button"
+          onClick={handleSendReceipt}
           className="flex h-12 w-full items-center justify-center gap-2 overflow-hidden rounded-full border-[1.5px] border-fg-brand px-4 text-base font-medium leading-5 tracking-tight text-fg-brand transition-colors hover:bg-fill-brand-subtle"
         >
           Enviar Comprobante
         </button>
         <button
           type="button"
-          className="flex h-12 w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-fill-brand px-4 text-base font-medium leading-5 tracking-tight text-fg-on-brand transition-colors hover:bg-fill-brand-hover"
+          onClick={handleRequestAccess}
+          disabled={isPending || accessRequested}
+          className="flex h-12 w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-fill-brand px-4 text-base font-medium leading-5 tracking-tight text-fg-on-brand transition-colors hover:bg-fill-brand-hover disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Solicitar acceso
+          {accessRequested
+            ? "Solicitud enviada"
+            : isPending
+              ? "Enviando..."
+              : "Solicitar acceso"}
         </button>
       </div>
     </main>
