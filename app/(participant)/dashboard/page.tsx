@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Header } from "@/components/layout/header";
 import { InscriptionHome } from "./inscription-home";
 import { PaymentOnboardingModal } from "./payment-onboarding-modal";
+import { MatchCards, type FeaturedMatch } from "./match-cards";
 
 export default async function DashboardPage() {
   const session = await verifyParticipant();
@@ -37,6 +38,34 @@ export default async function DashboardPage() {
   // Posición y puntos reales, calculados con el mismo ranking que la página
   // de Ranking para que el dato del card coincida exactamente.
   const { position, total } = await getParticipantRanking(session.sub);
+
+  // Partidos "por comenzar": el saque está dentro de los próximos 30 minutos
+  // o ya arrancó y sigue en juego (ventana de ~2.5 h) y todavía no se cargó el
+  // resultado. Según cuántos haya, la home muestra el diseño "on-match" (uno)
+  // o "on-matches" (varios). (Figma 263:11337 / 263:11868)
+  // eslint-disable-next-line react-hooks/purity -- server component: hora actual de render
+  const NOW = Date.now();
+  const THIRTY_MIN = 30 * 60 * 1000;
+  const LIVE_WINDOW = 2.5 * 60 * 60 * 1000;
+  const featuredMatches: FeaturedMatch[] = await prisma.match.findMany({
+    where: {
+      resultEnteredAt: null,
+      scheduledAt: {
+        gte: new Date(NOW - LIVE_WINDOW),
+        lte: new Date(NOW + THIRTY_MIN),
+      },
+    },
+    orderBy: { scheduledAt: "asc" },
+    select: {
+      id: true,
+      round: true,
+      homeTeam: true,
+      awayTeam: true,
+      scheduledAt: true,
+      homeScore: true,
+      awayScore: true,
+    },
+  });
 
   return (
     <div className="flex flex-1 flex-col bg-background">
@@ -80,6 +109,10 @@ export default async function DashboardPage() {
             />
           </div>
         </Link>
+
+        {/* Partido(s) por comenzar — diseño Figma 263:11337 / 263:11868.
+            El layout (horizontal vs. cuadrado) depende de cuántos haya. */}
+        <MatchCards matches={featuredMatches} />
 
         {/* Pronósticos */}
         <Tile

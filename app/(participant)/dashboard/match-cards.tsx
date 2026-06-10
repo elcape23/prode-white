@@ -184,3 +184,48 @@ export function CompactMatchCard({ match }: { match: FeaturedMatch }) {
     </div>
   );
 }
+
+
+type LaidOutCard = { match: FeaturedMatch; variant: "featured" | "compact" };
+
+/**
+ * Decide el layout según cuántos partidos haya por comenzar:
+ *  - 1 → uno horizontal (destacado).
+ *  - 2 → dos horizontales apilados.
+ *  - 3 → el primero horizontal y debajo dos cuadrados (compactos).
+ *  - 4 → los cuatro cuadrados, en dos filas (2×2).
+ *  - ≥5 → par: todos cuadrados; impar: el primero horizontal y el resto
+ *    cuadrados.
+ */
+function layoutFor(matches: FeaturedMatch[]): LaidOutCard[] {
+  const featured = (m: FeaturedMatch): LaidOutCard => ({ match: m, variant: "featured" });
+  const compact = (m: FeaturedMatch): LaidOutCard => ({ match: m, variant: "compact" });
+  const n = matches.length;
+
+  if (n === 0) return [];
+  if (n === 1) return [featured(matches[0])];
+  if (n === 2) return matches.map(featured);
+  if (n === 3) return [featured(matches[0]), compact(matches[1]), compact(matches[2])];
+  if (n === 4) return matches.map(compact);
+  if (n % 2 === 0) return matches.map(compact);
+  return matches.map((m, i) => (i === 0 ? featured(m) : compact(m)));
+}
+
+/**
+ * Renderiza el bloque de partidos "por comenzar" en la home, eligiendo entre
+ * la variante horizontal (FeaturedMatchCard) y la cuadrada (CompactMatchCard)
+ * según la cantidad. Devuelve hijos directos del grid de 2 columnas.
+ */
+export function MatchCards({ matches }: { matches: FeaturedMatch[] }) {
+  return (
+    <>
+      {layoutFor(matches).map(({ match, variant }) =>
+        variant === "featured" ? (
+          <FeaturedMatchCard key={match.id} match={match} />
+        ) : (
+          <CompactMatchCard key={match.id} match={match} />
+        ),
+      )}
+    </>
+  );
+}
