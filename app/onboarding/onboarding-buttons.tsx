@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { loginWithEmail, registerWithEmail } from "@/actions/auth-email";
 import { EmailModal } from "./email-modal";
@@ -10,6 +11,7 @@ import { PasswordModal } from "./password-modal";
 import { LoginModal } from "./login-modal";
 
 type Step = "none" | "email" | "name" | "phone" | "password" | "login";
+type LoadingFor = "login" | "register" | null;
 
 export function OnboardingButtons() {
   const [step, setStep] = useState<Step>("none");
@@ -18,15 +20,18 @@ export function OnboardingButtons() {
   const [apellido, setApellido] = useState("");
   const [phone, setPhone] = useState("");
   const [authError, setAuthError] = useState<string | null>(null);
+  const [loadingFor, setLoadingFor] = useState<LoadingFor>(null);
   const [isPending, startTransition] = useTransition();
 
   const handlePasswordContinue = (password: string) => {
     setStep("none");
     setAuthError(null);
+    setLoadingFor("register");
     startTransition(async () => {
       const result = await registerWithEmail(email, `${nombre} ${apellido}`, phone, password);
       if (result?.error) {
         setAuthError(result.error);
+        setLoadingFor(null);
       }
     });
   };
@@ -34,15 +39,27 @@ export function OnboardingButtons() {
   const handleLoginContinue = (loginEmail: string, password: string, rememberMe: boolean) => {
     setStep("none");
     setAuthError(null);
+    setLoadingFor("login");
     startTransition(async () => {
       const result = await loginWithEmail(loginEmail, password, rememberMe);
       if (result?.error) {
         setAuthError(result.error);
+        setLoadingFor(null);
       }
     });
   };
 
   return (
+    <>
+      {isPending && loadingFor && (
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-[#001842]/95 backdrop-blur-sm">
+          <Loader2 className="size-10 animate-spin text-white" />
+          <p className="font-heading text-base font-semibold text-white">
+            {loadingFor === "login" ? "Iniciando sesión..." : "Creando cuenta..."}
+          </p>
+        </div>
+      )}
+
     <div className="flex w-full flex-col items-stretch gap-2">
       <Button
         variant="outline"
@@ -58,7 +75,7 @@ export function OnboardingButtons() {
         onClick={() => setStep("email")}
         disabled={isPending}
       >
-        {isPending ? "Creando cuenta..." : "Sumarme al Prode"}
+        Sumarme al Prode
       </Button>
 
       {authError && (
@@ -105,5 +122,6 @@ export function OnboardingButtons() {
         onContinue={handleLoginContinue}
       />
     </div>
+    </>
   );
 }
