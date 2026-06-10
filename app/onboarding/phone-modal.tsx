@@ -45,7 +45,6 @@ export function PhoneModal({
             required
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            placeholder="hincha@prodewhite.com"
             className="h-12 rounded-2xl px-4 text-base"
           />
         </div>

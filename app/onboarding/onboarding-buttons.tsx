@@ -31,11 +31,11 @@ export function OnboardingButtons() {
     });
   };
 
-  const handleLoginContinue = (loginEmail: string, password: string) => {
+  const handleLoginContinue = (loginEmail: string, password: string, rememberMe: boolean) => {
     setStep("none");
     setAuthError(null);
     startTransition(async () => {
-      const result = await loginWithEmail(loginEmail, password);
+      const result = await loginWithEmail(loginEmail, password, rememberMe);
       if (result?.error) {
         setAuthError(result.error);
       }

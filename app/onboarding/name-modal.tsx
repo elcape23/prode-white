@@ -40,7 +40,6 @@ export function NameModal({
             required
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
-            placeholder="hincha@prodewhite.com"
             className="h-12 rounded-2xl px-4 text-base"
           />
         </div>
@@ -57,7 +56,6 @@ export function NameModal({
             required
             value={apellido}
             onChange={(e) => setApellido(e.target.value)}
-            placeholder="hincha@prodewhite.com"
             className="h-12 rounded-2xl px-4 text-base"
           />
         </div>

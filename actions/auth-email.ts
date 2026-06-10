@@ -43,7 +43,8 @@ export async function registerWithEmail(
 
 export async function loginWithEmail(
   email: string,
-  password: string
+  password: string,
+  rememberMe = false
 ): Promise<{ error: string } | undefined> {
   const normalizedEmail = email.trim().toLowerCase();
 
@@ -59,11 +60,10 @@ export async function loginWithEmail(
     return { error: "Email o contraseña incorrectos." };
   }
 
-  await createSession({
-    sub: participant.id,
-    role: "participant",
-    name: participant.name,
-  });
+  await createSession(
+    { sub: participant.id, role: "participant", name: participant.name },
+    rememberMe
+  );
 
   redirect("/dashboard");
 }

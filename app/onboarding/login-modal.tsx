@@ -20,16 +20,17 @@ export function LoginModal({
   open: boolean;
   onOpenChange: (open: boolean) => void;
   /** Confirma las credenciales e inicia sesión. */
-  onContinue: (email: string, password: string) => void;
+  onContinue: (email: string, password: string, rememberMe: boolean) => void;
 }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [show, setShow] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || !password) return;
-    onContinue(email.trim(), password);
+    onContinue(email.trim(), password, rememberMe);
   };
 
   return (
@@ -83,6 +84,16 @@ export function LoginModal({
             </button>
           </div>
         </div>
+
+        <label className="flex cursor-pointer items-center gap-2 px-1">
+          <input
+            type="checkbox"
+            checked={rememberMe}
+            onChange={(e) => setRememberMe(e.target.checked)}
+            className="size-4 accent-fg-brand"
+          />
+          <span className="text-sm text-fg-secondary">Recordarme</span>
+        </label>
 
         <Button
           type="submit"

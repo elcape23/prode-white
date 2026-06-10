@@ -54,7 +54,11 @@ export async function deleteParticipant(
 ): Promise<AdminActionState> {
   await verifyAdmin();
 
-  await prisma.participant.delete({ where: { id: participantId } });
+  await prisma.$transaction([
+    prisma.prediction.deleteMany({ where: { participantId } }),
+    prisma.bonusPrediction.deleteMany({ where: { participantId } }),
+    prisma.participant.delete({ where: { id: participantId } }),
+  ]);
 
   return { success: "Participante eliminado." };
 }

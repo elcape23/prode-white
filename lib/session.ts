@@ -11,16 +11,16 @@ export type { SessionPayload } from "@/lib/session-crypto";
 export { encrypt, decrypt };
 
 export async function createSession(
-  payload: import("@/lib/session-crypto").SessionPayload
+  payload: import("@/lib/session-crypto").SessionPayload,
+  rememberMe = true
 ): Promise<void> {
   const token = await encrypt(payload);
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
   const cookieStore = await cookies();
   cookieStore.set("session", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    expires: expiresAt,
+    ...(rememberMe && { expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) }),
     path: "/",
   });
 }
