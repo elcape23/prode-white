@@ -49,6 +49,16 @@ export default function AdminLoginPage() {
             />
           </div>
 
+          <label className="flex cursor-pointer items-center gap-2">
+            <input
+              type="checkbox"
+              name="rememberMe"
+              value="true"
+              className="size-4 accent-fg-brand"
+            />
+            <span className="text-sm text-muted-foreground">Recordarme</span>
+          </label>
+
           <Button type="submit" disabled={pending} className="w-full h-11 font-bold mt-2">
             {pending ? "Ingresando..." : "Ingresar"}
           </Button>
