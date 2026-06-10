@@ -5,7 +5,7 @@ import { OnboardingButtons } from "./onboarding-buttons";
 
 export const metadata: Metadata = {
   title: "Sumate al Prode — Las White F.C.",
-  description: "Prode oficial de Las White F.C. $500.000 en premios.",
+  description: "Prode oficial de Las White F.C. $600.000 en premios.",
 };
 
 type Prize = {
