@@ -4,14 +4,19 @@ import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { loginWithEmail, registerWithEmail } from "@/actions/auth-email";
 import { EmailModal } from "./email-modal";
+import { NameModal } from "./name-modal";
+import { PhoneModal } from "./phone-modal";
 import { PasswordModal } from "./password-modal";
 import { LoginModal } from "./login-modal";
 
-type Step = "none" | "email" | "password" | "login";
+type Step = "none" | "email" | "name" | "phone" | "password" | "login";
 
 export function OnboardingButtons() {
   const [step, setStep] = useState<Step>("none");
   const [email, setEmail] = useState("");
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
+  const [phone, setPhone] = useState("");
   const [authError, setAuthError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -19,7 +24,7 @@ export function OnboardingButtons() {
     setStep("none");
     setAuthError(null);
     startTransition(async () => {
-      const result = await registerWithEmail(email, password);
+      const result = await registerWithEmail(email, `${nombre} ${apellido}`, phone, password);
       if (result?.error) {
         setAuthError(result.error);
       }
@@ -65,6 +70,25 @@ export function OnboardingButtons() {
         onOpenChange={(open) => setStep(open ? "email" : "none")}
         onContinue={(value) => {
           setEmail(value);
+          setStep("name");
+        }}
+      />
+
+      <NameModal
+        open={step === "name"}
+        onOpenChange={(open) => setStep(open ? "name" : "none")}
+        onContinue={(n, a) => {
+          setNombre(n);
+          setApellido(a);
+          setStep("phone");
+        }}
+      />
+
+      <PhoneModal
+        open={step === "phone"}
+        onOpenChange={(open) => setStep(open ? "phone" : "none")}
+        onContinue={(p) => {
+          setPhone(p);
           setStep("password");
         }}
       />

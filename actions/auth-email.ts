@@ -7,6 +7,8 @@ import { createSession } from "@/lib/session";
 
 export async function registerWithEmail(
   email: string,
+  name: string,
+  phone: string,
   password: string
 ): Promise<{ error: string } | undefined> {
   const normalizedEmail = email.trim().toLowerCase();
@@ -19,12 +21,12 @@ export async function registerWithEmail(
   }
 
   const passwordHash = await bcrypt.hash(password, 10);
-  const name = normalizedEmail.split("@")[0];
 
   const participant = await prisma.participant.create({
     data: {
-      name,
+      name: name.trim(),
       email: normalizedEmail,
+      phone: phone.trim() || null,
       passwordHash,
       status: "PENDING",
     },

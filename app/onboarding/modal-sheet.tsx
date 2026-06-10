@@ -80,6 +80,10 @@ export function ModalSheet({
           </div>
 
           {children}
+
+          <div className="flex justify-center pt-1">
+            <div className="h-1 w-32 rounded-full bg-fg-brand/20" />
+          </div>
         </DialogPrimitive.Popup>
       </DialogPrimitive.Portal>
     </DialogPrimitive.Root>
