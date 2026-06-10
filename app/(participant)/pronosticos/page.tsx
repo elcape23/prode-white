@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { verifyParticipant } from "@/lib/dal";
 import prisma from "@/lib/prisma";
 import { PronosticosClient } from "./pronosticos-client";
@@ -8,6 +9,37 @@ const TOURNAMENT_ID = "default-tournament";
 
 export default async function PronosticosPage() {
   const session = await verifyParticipant();
+
+  // Usuarios cuya solicitud de acceso todavía no fue aprobada ven el estado
+  // "pendiente" en lugar del fixture de pronósticos. (Figma node 271:7339)
+  const participant = await prisma.participant.findUnique({
+    where: { id: session.sub },
+    select: { status: true },
+  });
+
+  if (!participant || participant.status !== "APPROVED") {
+    return (
+      <div className="flex flex-1 flex-col items-center bg-background">
+        <Header />
+
+        <div className="flex flex-1 flex-col items-center justify-center gap-6 p-5">
+          <div className="relative h-[92px] w-[60px]">
+            <Image
+              src="/images/logo.svg"
+              alt="Prode White 2026"
+              fill
+              className="object-contain"
+            />
+          </div>
+          <p className="max-w-[300px] text-center text-base leading-5 tracking-tight text-fg-brand">
+            Tu solicitud de acceso todavía está pendiente. Te enviaremos un
+            mensaje cuando sea aprobada.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
 
   const [matches, myPredictions] = await Promise.all([
     prisma.match.findMany({

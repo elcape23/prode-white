@@ -18,14 +18,14 @@ type Prize = {
 const PRIZES: Prize[] = [
   {
     place: "1er Puesto",
-    amount: "$350.000",
+    amount: "$400.000",
     pattern: "/images/pattern-blue.png",
     className: "rotate-[10deg] top-0",
     z: "z-30",
   },
   {
     place: "2do Puesto",
-    amount: "$100.000",
+    amount: "$150.000",
     pattern: "/images/pattern-green.png",
     className: "top-[68px]",
     z: "z-20",
@@ -130,7 +130,7 @@ export function WelcomeModal() {
             />
             <div className="flex w-full flex-col items-center text-center text-white">
               <p className="font-heading text-[80px] font-black leading-[72px]">
-                $500.000
+                $600.000
               </p>
               <p className="font-heading text-[60px] font-bold leading-[52px]">
                 EN PREMIOS

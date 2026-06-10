@@ -39,7 +39,7 @@ const fwc2026Expanded = localFont({
 
 export const metadata: Metadata = {
   title: "Prode White – Prode oficial de Las White F.C.",
-  description: "Participá en el prode oficial de Las White F.C. y ganá hasta $350.000.",
+  description: "Participá en el prode oficial de Las White F.C. y ganá hasta $600.000.",
 };
 
 export default function RootLayout({
