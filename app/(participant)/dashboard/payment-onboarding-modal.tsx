@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { markWelcomeSeen } from "@/actions/welcome";
+import { requestAccess } from "@/actions/access-request";
 
 /**
  * Modal de onboarding de pago en 3 pasos que aparece automáticamente la
@@ -18,15 +19,17 @@ import { markWelcomeSeen } from "@/actions/welcome";
  * TODO: reemplazar los placeholders (alias, CBU y número de WhatsApp) por los
  * datos reales de cobro cuando estén disponibles.
  */
-const ALIAS = "prode.white";
-const CBU = "000000000000000";
+const ALIAS = "loaiglesias.mp";
+const ACCOUNT_INFO = {
+  nombre: "Loana Iglesias",
+  cuit: "27-37131864-5",
+  entidad: "Mercado Pago",
+};
 // Número de WhatsApp en formato internacional sin "+" (ej: 5491122334455).
-const WHATSAPP_NUMBER = "0000000000";
+const WHATSAPP_NUMBER = "+5493814090778";
 
 const WHATSAPP_RECEIPT_MSG =
   "Hola, te envío el comprobante de pago de mi inscripción al Prode.";
-const WHATSAPP_ACCESS_MSG =
-  "Hola, ya compartí el comprobante de pago. Quiero solicitar acceso para recibir mi PIN y empezar a jugar.";
 
 const TOTAL_STEPS = 3;
 
@@ -37,7 +40,8 @@ function waLink(message: string) {
 export function PaymentOnboardingModal() {
   const [open, setOpen] = useState(true);
   const [step, setStep] = useState(1);
-  const [, startTransition] = useTransition();
+  const [accessRequested, setAccessRequested] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const dismiss = () => {
     setOpen(false);
@@ -69,6 +73,18 @@ export function PaymentOnboardingModal() {
 
   const openWhatsApp = (message: string) => {
     window.open(waLink(message), "_blank", "noopener,noreferrer");
+  };
+
+  const handleRequestAccess = () => {
+    startTransition(async () => {
+      const result = await requestAccess();
+      if (result.ok) {
+        setAccessRequested(true);
+        toast.success("Solicitud enviada. El admin generará tu PIN en breve.");
+      } else {
+        toast.error(result.error ?? "No se pudo enviar la solicitud.");
+      }
+    });
   };
 
   return (
@@ -143,13 +159,24 @@ export function PaymentOnboardingModal() {
 
           {/* Contenido del paso */}
           {step === 1 && (
-            <div className="flex w-full flex-col gap-2">
+            <div className="flex w-full flex-col gap-4">
               <DialogPrimitive.Description className="text-base leading-5 tracking-tight text-fg-brand">
-                Transferí $10.000 a esta cuenta:
+                Transferí $10.000 a este cuenta:
               </DialogPrimitive.Description>
-              <div className="flex w-full flex-col gap-4 py-4">
-                <CopyField label="Alias" value={ALIAS} onCopy={copy} />
-                <CopyField label="CBU" value={CBU} onCopy={copy} />
+              <CopyField label="Alias" value={ALIAS} onCopy={copy} />
+              <div className="flex w-full flex-col gap-2">
+                <p className="text-base leading-5 tracking-tight text-fg-brand">Info</p>
+                <div className="rounded-2xl bg-secondary px-4 py-3 flex flex-col gap-1">
+                  <p className="text-base leading-5 tracking-tight text-fg-brand">
+                    <span className="font-medium">Nombre:</span> {ACCOUNT_INFO.nombre}
+                  </p>
+                  <p className="text-base leading-5 tracking-tight text-fg-brand">
+                    <span className="font-medium">CUIT:</span> {ACCOUNT_INFO.cuit}
+                  </p>
+                  <p className="text-base leading-5 tracking-tight text-fg-brand">
+                    <span className="font-medium">Entidad:</span> {ACCOUNT_INFO.entidad}
+                  </p>
+                </div>
               </div>
             </div>
           )}
@@ -170,12 +197,19 @@ export function PaymentOnboardingModal() {
           {step === 3 && (
             <div className="flex w-full flex-col gap-2">
               <DialogPrimitive.Description className="text-base leading-5 tracking-tight text-fg-brand">
-                Luego de compartir el comprobante, solicitar acceso para recibir
-                PIN y comenzar a jugar.
+                Luego de compartir el comprobante, solicitá acceso para recibir
+                tu PIN y comenzar a jugar.
               </DialogPrimitive.Description>
               <div className="flex w-full flex-col py-4 pb-10">
-                <OutlineButton onClick={() => openWhatsApp(WHATSAPP_ACCESS_MSG)}>
-                  Solicitar acceso
+                <OutlineButton
+                  onClick={handleRequestAccess}
+                  disabled={isPending || accessRequested}
+                >
+                  {accessRequested
+                    ? "Solicitud enviada"
+                    : isPending
+                      ? "Enviando..."
+                      : "Solicitar acceso"}
                 </OutlineButton>
               </div>
             </div>
@@ -223,16 +257,19 @@ function CopyField({
 
 function OutlineButton({
   onClick,
+  disabled,
   children,
 }: {
   onClick: () => void;
+  disabled?: boolean;
   children: React.ReactNode;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="flex h-12 w-full items-center justify-center gap-2 rounded-full border-[1.5px] border-fg-brand px-4 text-base font-medium leading-5 tracking-tight text-fg-brand transition-colors hover:bg-fill-brand-subtle"
+      disabled={disabled}
+      className="flex h-12 w-full items-center justify-center gap-2 rounded-full border-[1.5px] border-fg-brand px-4 text-base font-medium leading-5 tracking-tight text-fg-brand transition-colors hover:bg-fill-brand-subtle disabled:opacity-50 disabled:cursor-not-allowed"
     >
       {children}
     </button>

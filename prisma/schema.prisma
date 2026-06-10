@@ -53,7 +53,8 @@ model Participant {
   pricePaid        Int?
   createdAt        DateTime          @default(now())
   approvedAt       DateTime?
-  hasSeenWelcome   Boolean           @default(false)
+  hasSeenWelcome      Boolean           @default(false)
+  accessRequestedAt   DateTime?
 
   sponsorCode      SponsorCode?      @relation(fields: [sponsorCodeId], references: [id])
   predictions      Prediction[]

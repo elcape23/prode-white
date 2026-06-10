@@ -97,9 +97,16 @@ export default async function RegistracionesPage() {
                       <p className="font-bold">{p.name}</p>
                       <p className="text-sm text-muted-foreground">{p.phone}</p>
                     </div>
-                    <Badge variant={STATUS_VARIANT[p.status]}>
-                      {STATUS_LABEL[p.status]}
-                    </Badge>
+                    <div className="flex flex-col items-end gap-1">
+                      <Badge variant={STATUS_VARIANT[p.status]}>
+                        {STATUS_LABEL[p.status]}
+                      </Badge>
+                      {p.accessRequestedAt && p.status === "PENDING" && (
+                        <Badge variant="outline" className="text-fg-warning border-fg-warning/40 text-xs">
+                          Solicitó acceso
+                        </Badge>
+                      )}
+                    </div>
                   </div>
 
                   <div className="text-sm grid grid-cols-2 gap-x-4 gap-y-1">
