@@ -52,13 +52,22 @@ export async function saveBonusPredictions(
 ): Promise<BonusState> {
   const session = await verifyParticipant();
 
-  const tournament = await prisma.tournament.findUnique({
-    where: { id: TOURNAMENT_ID },
-    select: { firstMatchAt: true },
+  const firstRoundMatch = await prisma.match.findFirst({
+    where: { tournamentId: TOURNAMENT_ID },
+    orderBy: { scheduledAt: "asc" },
+    select: { round: true },
   });
 
-  if (tournament?.firstMatchAt && new Date() >= tournament.firstMatchAt) {
-    return { ok: false, error: "El torneo ya comenzó. Los pronósticos bonus están cerrados." };
+  const secondMatchdayStart = firstRoundMatch
+    ? await prisma.match.findFirst({
+        where: { tournamentId: TOURNAMENT_ID, round: { not: firstRoundMatch.round } },
+        orderBy: { scheduledAt: "asc" },
+        select: { scheduledAt: true },
+      })
+    : null;
+
+  if (secondMatchdayStart && new Date() >= secondMatchdayStart.scheduledAt) {
+    return { ok: false, error: "La segunda fecha ya comenzó. Los pronósticos bonus están cerrados." };
   }
 
   const positions = [
