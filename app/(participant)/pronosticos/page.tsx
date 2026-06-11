@@ -123,8 +123,19 @@ export default async function PronosticosPage() {
 
   const sections = [...matchdaySections, ...koSections];
 
-  const total = matches.length;
-  const filled = myPredictions.length;
+  const availableMatchIds = new Set(
+    matches
+      .filter(
+        (m) =>
+          teamNameEs(m.homeTeam) !== "Por definir" &&
+          teamNameEs(m.awayTeam) !== "Por definir",
+      )
+      .map((m) => m.id),
+  );
+  const total = availableMatchIds.size;
+  const filled = myPredictions.filter((p) =>
+    availableMatchIds.has(p.matchId),
+  ).length;
 
   return (
     <div className="flex flex-1 flex-col items-center bg-background">

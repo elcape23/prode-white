@@ -85,7 +85,7 @@ export function BonusForm({
             <div className="bg-card p-3 rounded-b-2xl">
               {type === "country" ? (
                 <Select name={key} value={values[key] || null} onValueChange={(v) => set(key)(v ?? "")}>
-                  <SelectTrigger className="h-10! w-full rounded-md px-3 text-sm">
+                  <SelectTrigger className="h-10! w-full rounded-md px-3 text-base">
                     <SelectValue placeholder={placeholder}>
                       {(value: string) => {
                         const selected = countries.find((c) => c.value === value);
@@ -111,7 +111,7 @@ export function BonusForm({
                   </SelectTrigger>
                   <SelectContent>
                     {countries.map((c) => (
-                      <SelectItem key={c.value} value={c.value} className="gap-3 px-3 py-2">
+                      <SelectItem key={c.value} value={c.value} className="gap-3 px-3 py-2 hover:bg-muted focus:bg-muted">
                         <span className="flex h-6 w-9 shrink-0 items-center justify-center overflow-hidden rounded-br-lg rounded-tl-lg border border-[color:var(--color-neutral-300)] bg-muted">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
