@@ -13,6 +13,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { flagSrc, teamNameShort } from "@/lib/flags";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { RankedParticipant } from "@/lib/ranking";
 
 // ─── Rank badge (mirrors server page) ────────────────────────────────────────
@@ -259,6 +260,65 @@ function organiseEntries(entries: PredictionEntry[]): (MatchdaySection | RoundSe
   return [...matchdaySections, ...koSections];
 }
 
+// ─── Loading skeleton (mirrors GroupCard + ReadonlyMatchRow) ─────────────────
+
+function MatchRowSkeleton() {
+  return (
+    <div className="flex w-full items-center justify-center gap-3 px-3">
+      {/* Equipo local */}
+      <div className="flex min-w-0 flex-1 items-center justify-end gap-1">
+        <Skeleton className="h-4 w-20" />
+        <Skeleton className="h-6 w-9 rounded-br-lg rounded-tl-lg" />
+      </div>
+
+      {/* Marcador */}
+      <div className="flex shrink-0 items-center gap-1">
+        <Skeleton className="size-10 rounded-lg" />
+        <span className="text-base font-medium text-fg-secondary">-</span>
+        <Skeleton className="size-10 rounded-lg" />
+      </div>
+
+      {/* Equipo visitante */}
+      <div className="flex min-w-0 flex-1 items-center gap-1">
+        <Skeleton className="h-6 w-9 rounded-br-lg rounded-tl-lg" />
+        <Skeleton className="h-4 w-20" />
+      </div>
+    </div>
+  );
+}
+
+function GroupCardSkeleton({ rows = 3 }: { rows?: number }) {
+  return (
+    <div className="w-full overflow-hidden rounded-2xl bg-card shadow-[0px_4px_12px_0px_rgba(0,0,0,0.15)]">
+      {/* Encabezado */}
+      <div className="flex w-full items-center gap-3 bg-[#F8F8F8] p-3">
+        <Skeleton className="size-7 rounded-md" />
+        <Skeleton className="h-4 w-24" />
+      </div>
+
+      {/* Filas */}
+      <div className="flex flex-col gap-6 py-6">
+        {Array.from({ length: rows }).map((_, i) => (
+          <MatchRowSkeleton key={i} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PredictionsSkeleton() {
+  return (
+    <div className="flex w-full flex-col items-center gap-8 p-5">
+      {/* Pill de jornada */}
+      <Skeleton className="h-10 w-40 rounded-full" />
+      <div className="flex w-full flex-col gap-5">
+        <GroupCardSkeleton rows={2} />
+        <GroupCardSkeleton rows={2} />
+      </div>
+    </div>
+  );
+}
+
 // ─── Main client component ────────────────────────────────────────────────────
 
 export function RankingClient({ ranked }: { ranked: RankedParticipant[] }) {
@@ -329,9 +389,7 @@ export function RankingClient({ ranked }: { ranked: RankedParticipant[] }) {
           {/* Scrollable content — same layout as PronosticosClient */}
           <div className="overflow-y-auto">
             {isPending ? (
-              <div className="flex items-center justify-center py-12">
-                <p className="text-sm text-fg-secondary">Cargando...</p>
-              </div>
+              <PredictionsSkeleton />
             ) : (
               <div className="flex w-full flex-col items-center gap-8 p-5">
                 {sections.map((section) =>
