@@ -75,7 +75,7 @@ export default async function DashboardPage() {
         {/* Hero — posición y puntos */}
         <Link
           href="/ranking"
-          className="relative col-span-2 flex min-h-[170px] items-end justify-between gap-2 overflow-hidden rounded-md p-4 drop-shadow-[0px_2px_3px_rgba(0,0,0,0.1)]"
+          className="relative col-span-2 flex aspect-[353/170.5] items-end justify-between gap-2 overflow-hidden rounded-md p-4 drop-shadow-[0px_2px_3px_rgba(0,0,0,0.1)]"
         >
           {/* Fondo con patrón */}
           <div className="pointer-events-none absolute left-1/2 top-1/2 size-[400px] -translate-x-1/2 -translate-y-1/2">
