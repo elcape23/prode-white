@@ -1,0 +1,29 @@
+{
+  "node": {
+    "7016aa6fb28994e787f8e72abba26c1c0b1d144089": {
+      "workers": {
+        "app/onboarding/page": {
+          "moduleId": 41712,
+          "async": true,
+          "exportedName": "loginWithEmail",
+          "filename": "actions/auth-email.ts"
+        }
+      },
+      "exportedName": "loginWithEmail",
+      "filename": "actions/auth-email.ts"
+    },
+    "78a0e8d76d846dbde2176a6ba6e2411f21d1a4b38a": {
+      "workers": {
+        "app/onboarding/page": {
+          "moduleId": 41712,
+          "async": true,
+          "exportedName": "registerWithEmail",
+          "filename": "actions/auth-email.ts"
+        }
+      },
+      "exportedName": "registerWithEmail",
+      "filename": "actions/auth-email.ts"
+    }
+  },
+  "edge": {}
+}

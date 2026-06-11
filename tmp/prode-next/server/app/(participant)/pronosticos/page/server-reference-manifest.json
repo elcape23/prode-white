@@ -1,0 +1,17 @@
+{
+  "node": {
+    "70e629d6d6a048f33dac694fb87d69864e97f7423d": {
+      "workers": {
+        "app/(participant)/pronosticos/page": {
+          "moduleId": 49535,
+          "async": true,
+          "exportedName": "savePrediction",
+          "filename": "actions/predictions.ts"
+        }
+      },
+      "exportedName": "savePrediction",
+      "filename": "actions/predictions.ts"
+    }
+  },
+  "edge": {}
+}

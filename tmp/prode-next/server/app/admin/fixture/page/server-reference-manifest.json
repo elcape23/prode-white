@@ -1,0 +1,101 @@
+{
+  "node": {
+    "006b57b4c08a79fac0e273855d9a289a62ea54d239": {
+      "workers": {
+        "app/admin/fixture/page": {
+          "moduleId": 47825,
+          "async": true,
+          "exportedName": "logout",
+          "filename": "actions/auth.ts"
+        }
+      },
+      "exportedName": "logout",
+      "filename": "actions/auth.ts"
+    },
+    "6084154a7aa3bd4a56f0bbc524fb12f19628d1ea4c": {
+      "workers": {
+        "app/admin/fixture/page": {
+          "moduleId": 47825,
+          "async": true,
+          "exportedName": "loginAdmin",
+          "filename": "actions/auth.ts"
+        }
+      },
+      "exportedName": "loginAdmin",
+      "filename": "actions/auth.ts"
+    },
+    "60d2a4742eb6417b13f672333f806eebd2358d4962": {
+      "workers": {
+        "app/admin/fixture/page": {
+          "moduleId": 47825,
+          "async": true,
+          "exportedName": "loginParticipant",
+          "filename": "actions/auth.ts"
+        }
+      },
+      "exportedName": "loginParticipant",
+      "filename": "actions/auth.ts"
+    },
+    "40e9cbac677416f09b18be6f8be5e984a8e014d8d6": {
+      "workers": {
+        "app/admin/fixture/page": {
+          "moduleId": 47825,
+          "async": true,
+          "exportedName": "deleteMatch",
+          "filename": "actions/admin/fixture.ts"
+        }
+      },
+      "exportedName": "deleteMatch",
+      "filename": "actions/admin/fixture.ts"
+    },
+    "001afd5064b1ed473a484314328ba0ce83b8e5f21e": {
+      "workers": {
+        "app/admin/fixture/page": {
+          "moduleId": 47825,
+          "async": true,
+          "exportedName": "clearFixture",
+          "filename": "actions/admin/fixture.ts"
+        }
+      },
+      "exportedName": "clearFixture",
+      "filename": "actions/admin/fixture.ts"
+    },
+    "409a26fd277c08de17f00ccf88e6f860f347e237c5": {
+      "workers": {
+        "app/admin/fixture/page": {
+          "moduleId": 47825,
+          "async": true,
+          "exportedName": "importFromApi",
+          "filename": "actions/admin/import-from-api.ts"
+        }
+      },
+      "exportedName": "importFromApi",
+      "filename": "actions/admin/import-from-api.ts"
+    },
+    "40d93a527e2027b54c9d801aafe26a20ab0dd6461d": {
+      "workers": {
+        "app/admin/fixture/page": {
+          "moduleId": 47825,
+          "async": true,
+          "exportedName": "importPlayersFromApi",
+          "filename": "actions/admin/import-players-from-api.ts"
+        }
+      },
+      "exportedName": "importPlayersFromApi",
+      "filename": "actions/admin/import-players-from-api.ts"
+    },
+    "40859988ea83a390cc5007bbbae6a0796ed3185537": {
+      "workers": {
+        "app/admin/fixture/page": {
+          "moduleId": 47825,
+          "async": true,
+          "exportedName": "syncResultsFromApi",
+          "filename": "actions/admin/sync-results.ts"
+        }
+      },
+      "exportedName": "syncResultsFromApi",
+      "filename": "actions/admin/sync-results.ts"
+    }
+  },
+  "edge": {}
+}

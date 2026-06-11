@@ -1,0 +1,53 @@
+{
+  "node": {
+    "006b57b4c08a79fac0e273855d9a289a62ea54d239": {
+      "workers": {
+        "app/admin/cuentas/page": {
+          "moduleId": 44490,
+          "async": true,
+          "exportedName": "logout",
+          "filename": "actions/auth.ts"
+        }
+      },
+      "exportedName": "logout",
+      "filename": "actions/auth.ts"
+    },
+    "6084154a7aa3bd4a56f0bbc524fb12f19628d1ea4c": {
+      "workers": {
+        "app/admin/cuentas/page": {
+          "moduleId": 44490,
+          "async": true,
+          "exportedName": "loginAdmin",
+          "filename": "actions/auth.ts"
+        }
+      },
+      "exportedName": "loginAdmin",
+      "filename": "actions/auth.ts"
+    },
+    "60d2a4742eb6417b13f672333f806eebd2358d4962": {
+      "workers": {
+        "app/admin/cuentas/page": {
+          "moduleId": 44490,
+          "async": true,
+          "exportedName": "loginParticipant",
+          "filename": "actions/auth.ts"
+        }
+      },
+      "exportedName": "loginParticipant",
+      "filename": "actions/auth.ts"
+    },
+    "40b79d17de29d31d9a0df8b5e72ff72b55a69dc6b4": {
+      "workers": {
+        "app/admin/cuentas/page": {
+          "moduleId": 44490,
+          "async": true,
+          "exportedName": "deleteParticipant",
+          "filename": "actions/admin/registrations.ts"
+        }
+      },
+      "exportedName": "deleteParticipant",
+      "filename": "actions/admin/registrations.ts"
+    }
+  },
+  "edge": {}
+}

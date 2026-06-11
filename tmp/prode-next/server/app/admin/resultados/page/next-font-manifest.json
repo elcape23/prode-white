@@ -1,0 +1,14 @@
+{
+  "pages": {},
+  "app": {
+    "[project]/app/admin/resultados/page": [
+      "static/media/FWC2026_NormalRegular-s.p.10_o-9ergkzzh.ttf",
+      "static/media/FWC2026_UltraCondensedMedium-s.p.0_86ynn7hofpg.ttf",
+      "static/media/FWC2026_UltraCondensedBold-s.p.15iscgycdymhx.ttf",
+      "static/media/FWC2026_UltraCondensedBlack-s.p.2ijhr8r5ahh0t.ttf",
+      "static/media/FWC2026_SemiExpandedBlack-s.p.3aejcji8jg2le.ttf"
+    ]
+  },
+  "appUsingSizeAdjust": true,
+  "pagesUsingSizeAdjust": false
+}

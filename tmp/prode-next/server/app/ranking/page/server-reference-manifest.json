@@ -1,0 +1,17 @@
+{
+  "node": {
+    "40f19bdad09a4aced89ee2ce669f7de6f7edc1b860": {
+      "workers": {
+        "app/ranking/page": {
+          "moduleId": 8335,
+          "async": true,
+          "exportedName": "getParticipantPredictions",
+          "filename": "actions/participants.ts"
+        }
+      },
+      "exportedName": "getParticipantPredictions",
+      "filename": "actions/participants.ts"
+    }
+  },
+  "edge": {}
+}

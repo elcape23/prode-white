@@ -39,20 +39,21 @@ export default async function DashboardPage() {
   // de Ranking para que el dato del card coincida exactamente.
   const { position, total } = await getParticipantRanking(session.sub);
 
-  // Partidos "por comenzar": el saque está dentro de los próximos 30 minutos
+  // Partidos "por comenzar": el saque está dentro de las próximas 2 horas
   // o ya arrancó y sigue en juego (ventana de ~2.5 h) y todavía no se cargó el
-  // resultado. Según cuántos haya, la home muestra el diseño "on-match" (uno)
-  // o "on-matches" (varios). (Figma 263:11337 / 263:11868)
+  // resultado. La card muestra el pronóstico del usuario (editable hasta 30 min
+  // antes del saque). Según cuántos haya, la home usa el diseño "on-match"
+  // (uno) o "on-matches" (varios). (Figma 263:11337 / 263:11868)
   // eslint-disable-next-line react-hooks/purity -- server component: hora actual de render
   const NOW = Date.now();
-  const THIRTY_MIN = 30 * 60 * 1000;
+  const TWO_HOURS = 2 * 60 * 60 * 1000;
   const LIVE_WINDOW = 2.5 * 60 * 60 * 1000;
-  const featuredMatches: FeaturedMatch[] = await prisma.match.findMany({
+  const rows = await prisma.match.findMany({
     where: {
       resultEnteredAt: null,
       scheduledAt: {
         gte: new Date(NOW - LIVE_WINDOW),
-        lte: new Date(NOW + THIRTY_MIN),
+        lte: new Date(NOW + TWO_HOURS),
       },
     },
     orderBy: { scheduledAt: "asc" },
@@ -62,10 +63,23 @@ export default async function DashboardPage() {
       homeTeam: true,
       awayTeam: true,
       scheduledAt: true,
-      homeScore: true,
-      awayScore: true,
+      predictions: {
+        where: { participantId: session.sub },
+        select: { homeScore: true, awayScore: true },
+      },
     },
   });
+
+  // Aplanamos la predicción del usuario (si existe) en la card.
+  const featuredMatches: FeaturedMatch[] = rows.map((m) => ({
+    id: m.id,
+    round: m.round,
+    homeTeam: m.homeTeam,
+    awayTeam: m.awayTeam,
+    scheduledAt: m.scheduledAt,
+    predHome: m.predictions[0]?.homeScore ?? null,
+    predAway: m.predictions[0]?.awayScore ?? null,
+  }));
 
   return (
     <div className="flex flex-1 flex-col bg-background">

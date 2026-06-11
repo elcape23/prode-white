@@ -1,0 +1,17 @@
+{
+  "node": {
+    "60a52374143e4eab69389e4309ebf6681822bce5fb": {
+      "workers": {
+        "app/(participant)/bonus/page": {
+          "moduleId": 3166,
+          "async": true,
+          "exportedName": "saveBonusPredictions",
+          "filename": "actions/predictions.ts"
+        }
+      },
+      "exportedName": "saveBonusPredictions",
+      "filename": "actions/predictions.ts"
+    }
+  },
+  "edge": {}
+}

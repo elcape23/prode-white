@@ -1,7 +1,17 @@
-import { GlobeIcon } from "hugeicons-react";
+"use client";
+
+import { useEffect, useState, useTransition } from "react";
+import { GlobeIcon, SquareLock02Icon } from "hugeicons-react";
+import { savePrediction } from "@/actions/predictions";
 import { flagSrc, teamNameEs, teamNameShort } from "@/lib/flags";
 
 const TZ = "America/Argentina/Buenos_Aires";
+const LOCK_MS = 30 * 60 * 1000;
+
+/** ms hasta que el partido se bloquea (30 min antes del saque). */
+function msUntilLock(scheduledAt: Date) {
+  return new Date(scheduledAt).getTime() - LOCK_MS - Date.now();
+}
 
 /** Etiqueta de la cabecera: "Grupo A" para fase de grupos, o el nombre de la
  *  ronda de eliminación. Replica la lógica de la pantalla de Pronósticos. */
@@ -39,8 +49,9 @@ export type FeaturedMatch = {
   homeTeam: string;
   awayTeam: string;
   scheduledAt: Date;
-  homeScore: number | null;
-  awayScore: number | null;
+  /** Pronóstico guardado del usuario (null si aún no cargó). */
+  predHome: number | null;
+  predAway: number | null;
 };
 
 /** Bandera de la selección. Cae al ícono genérico si no se reconoce. */
@@ -63,17 +74,63 @@ function Flag({ team }: { team: string }) {
   );
 }
 
-/** Casillero de marcador (solo lectura). 40px en la card destacada, 32px en
- *  las compactas. */
-function Score({ value, sm = false }: { value: number | null; sm?: boolean }) {
+/** Estado compartido del pronóstico editable de una card. */
+function usePrediction(match: FeaturedMatch) {
+  const [home, setHome] = useState<number | string>(match.predHome ?? "");
+  const [away, setAway] = useState<number | string>(match.predAway ?? "");
+  const [locked, setLocked] = useState(msUntilLock(match.scheduledAt) <= 0);
+  const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    const remaining = msUntilLock(match.scheduledAt);
+    // El estado inicial ya cubre "ya bloqueado"; aquí solo programamos el
+    // bloqueo automático cuando todavía falta tiempo.
+    if (remaining <= 0) return;
+    const timer = setTimeout(() => setLocked(true), remaining);
+    return () => clearTimeout(timer);
+  }, [match.scheduledAt]);
+
+  const save = (h: number | string, a: number | string) => {
+    if (h === "" || a === "") return;
+    const hn = Number(h);
+    const an = Number(a);
+    if (isNaN(hn) || isNaN(an) || hn < 0 || an < 0) return;
+    startTransition(async () => {
+      await savePrediction(match.id, hn, an);
+    });
+  };
+
+  return { home, setHome, away, setAway, locked, isPending, save };
+}
+
+type ScoreBoxProps = {
+  value: number | string;
+  disabled: boolean;
+  onChange: (v: string) => void;
+  onCommit: () => void;
+  label: string;
+  sm?: boolean;
+};
+
+/** Casillero de marcador editable (input). 40px en la card destacada, 32px en
+ *  las compactas. Cuando está bloqueado se muestra disabled con el pronóstico
+ *  guardado. */
+function ScoreBox({ value, disabled, onChange, onCommit, label, sm = false }: ScoreBoxProps) {
   return (
-    <div
-      className={`flex shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-card text-center font-medium tabular-nums text-foreground ${
+    <input
+      type="number"
+      inputMode="numeric"
+      min={0}
+      max={99}
+      aria-label={label}
+      value={value}
+      disabled={disabled}
+      onChange={(e) => onChange(e.target.value)}
+      onBlur={onCommit}
+      className={`shrink-0 rounded-lg border border-border bg-card text-center font-medium tabular-nums text-foreground disabled:bg-muted disabled:text-fg-disabled focus:outline-none focus:ring-2 focus:ring-fg-brand [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
         sm ? "size-8 text-sm" : "size-10 text-base"
       }`}
-    >
-      {value ?? 0}
-    </div>
+    />
   );
 }
 
@@ -92,18 +149,31 @@ function GroupHeading({ round }: { round: string }) {
   );
 }
 
+/** Indicador "Cerrado" cuando el pronóstico ya está bloqueado. */
+function LockedHint() {
+  return (
+    <div className="flex h-3 items-center justify-center">
+      <span className="flex items-center gap-1 text-[11px] text-fg-tertiary">
+        <SquareLock02Icon size={12} strokeWidth={2} /> Cerrado
+      </span>
+    </div>
+  );
+}
+
 /**
  * Card destacada (ancho completo) para el próximo partido o partido en juego.
- * Diseño Figma node 263:11337 (estado "on-match").
+ * El marcador es el pronóstico editable del usuario. Diseño Figma node
+ * 263:11337 (estado "on-match").
  */
 export function FeaturedMatchCard({ match }: { match: FeaturedMatch }) {
   const home = teamNameEs(match.homeTeam);
   const away = teamNameEs(match.awayTeam);
+  const { home: h, setHome, away: a, setAway, locked, isPending, save } = usePrediction(match);
 
   return (
     <div className="col-span-2 flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-[0px_4px_12px_0px_rgba(0,0,0,0.15)]">
       <GroupHeading round={match.round} />
-      <div className="flex flex-col items-center gap-3 py-3">
+      <div className={`flex flex-col items-center gap-3 py-3 ${locked ? "opacity-60" : ""}`}>
         <div className="flex w-full items-center gap-3 px-3">
           {/* Equipo local */}
           <div className="flex min-w-0 flex-1 items-center justify-end gap-1">
@@ -113,11 +183,23 @@ export function FeaturedMatchCard({ match }: { match: FeaturedMatch }) {
             <Flag team={match.homeTeam} />
           </div>
 
-          {/* Marcador */}
+          {/* Marcador (pronóstico del usuario) */}
           <div className="flex shrink-0 items-center gap-1">
-            <Score value={match.homeScore} />
+            <ScoreBox
+              value={h}
+              disabled={locked || isPending}
+              onChange={setHome}
+              onCommit={() => save(h, a)}
+              label={`Goles ${home}`}
+            />
             <span className="text-base font-medium text-foreground">-</span>
-            <Score value={match.awayScore} />
+            <ScoreBox
+              value={a}
+              disabled={locked || isPending}
+              onChange={setAway}
+              onCommit={() => save(h, a)}
+              label={`Goles ${away}`}
+            />
           </div>
 
           {/* Equipo visitante */}
@@ -134,6 +216,8 @@ export function FeaturedMatchCard({ match }: { match: FeaturedMatch }) {
           <span>{formatDay(match.scheduledAt)}</span>
           <span>{formatHour(match.scheduledAt)}</span>
         </div>
+
+        {locked && <LockedHint />}
       </div>
     </div>
   );
@@ -141,16 +225,18 @@ export function FeaturedMatchCard({ match }: { match: FeaturedMatch }) {
 
 /**
  * Card compacta (media columna) usada cuando hay más de un partido por
- * comenzar. Diseño Figma node 263:11868 (estado "on-matches").
+ * comenzar. El marcador es el pronóstico editable del usuario. Diseño Figma
+ * node 263:11868 (estado "on-matches").
  */
 export function CompactMatchCard({ match }: { match: FeaturedMatch }) {
   const home = teamNameEs(match.homeTeam);
   const away = teamNameEs(match.awayTeam);
+  const { home: h, setHome, away: a, setAway, locked, isPending, save } = usePrediction(match);
 
   return (
     <div className="flex flex-col self-start overflow-hidden rounded-2xl border border-border bg-card shadow-[0px_4px_12px_0px_rgba(0,0,0,0.15)]">
       <GroupHeading round={match.round} />
-      <div className="flex flex-col gap-2 py-3">
+      <div className={`flex flex-col gap-2 py-3 ${locked ? "opacity-60" : ""}`}>
         <div className="flex flex-col gap-2 px-3">
           {/* Equipo local */}
           <div className="flex items-center gap-1">
@@ -160,7 +246,14 @@ export function CompactMatchCard({ match }: { match: FeaturedMatch }) {
               </p>
               <Flag team={match.homeTeam} />
             </div>
-            <Score value={match.homeScore} sm />
+            <ScoreBox
+              value={h}
+              disabled={locked || isPending}
+              onChange={setHome}
+              onCommit={() => save(h, a)}
+              label={`Goles ${home}`}
+              sm
+            />
           </div>
 
           {/* Equipo visitante */}
@@ -171,7 +264,14 @@ export function CompactMatchCard({ match }: { match: FeaturedMatch }) {
               </p>
               <Flag team={match.awayTeam} />
             </div>
-            <Score value={match.awayScore} sm />
+            <ScoreBox
+              value={a}
+              disabled={locked || isPending}
+              onChange={setAway}
+              onCommit={() => save(h, a)}
+              label={`Goles ${away}`}
+              sm
+            />
           </div>
         </div>
 
@@ -180,11 +280,12 @@ export function CompactMatchCard({ match }: { match: FeaturedMatch }) {
           <span>{formatDay(match.scheduledAt)}</span>
           <span>{formatHour(match.scheduledAt)}</span>
         </div>
+
+        {locked && <LockedHint />}
       </div>
     </div>
   );
 }
-
 
 type LaidOutCard = { match: FeaturedMatch; variant: "featured" | "compact" };
 

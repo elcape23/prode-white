@@ -1,0 +1,17 @@
+{
+  "node": {
+    "60d0fef4197874504a735f7d67e8b653135cfc9098": {
+      "workers": {
+        "app/(public)/register/page": {
+          "moduleId": 69733,
+          "async": true,
+          "exportedName": "submitRegistration",
+          "filename": "actions/registration.ts"
+        }
+      },
+      "exportedName": "submitRegistration",
+      "filename": "actions/registration.ts"
+    }
+  },
+  "edge": {}
+}
