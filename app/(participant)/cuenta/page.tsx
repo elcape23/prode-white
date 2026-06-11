@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 import { logout } from "@/actions/auth";
 import { Header } from "@/components/layout/header";
 import { Button } from "@/components/ui/button";
-import { PencilEdit02Icon } from "hugeicons-react";
+import { AccountNameRows } from "./account-name-rows";
 
 export default async function CuentaPage() {
   const session = await verifyParticipant();
@@ -34,35 +34,7 @@ export default async function CuentaPage() {
 
           {/* Cuerpo */}
           <div className="flex flex-col bg-card py-3">
-            <div className="flex items-center gap-1 px-3 py-2">
-              <p className="text-[13px] font-medium leading-4 text-fg-default">
-                Nombre:
-              </p>
-              <p className="flex-1 text-[13px] leading-4 text-fg-secondary">
-                {firstName}
-              </p>
-              <button
-                aria-label="Editar nombre"
-                className="text-fg-secondary transition-colors hover:text-fg-brand"
-              >
-                <PencilEdit02Icon className="size-5" />
-              </button>
-            </div>
-
-            <div className="flex items-center gap-1 px-3 py-2">
-              <p className="text-[13px] font-medium leading-4 text-fg-default">
-                Apellido:
-              </p>
-              <p className="flex-1 text-[13px] leading-4 text-fg-secondary">
-                {lastName}
-              </p>
-              <button
-                aria-label="Editar apellido"
-                className="text-fg-secondary transition-colors hover:text-fg-brand"
-              >
-                <PencilEdit02Icon className="size-5" />
-              </button>
-            </div>
+            <AccountNameRows firstName={firstName} lastName={lastName} />
 
             <div className="flex items-center gap-1 px-3 py-2">
               <p className="text-[13px] font-medium leading-4 text-fg-default">
