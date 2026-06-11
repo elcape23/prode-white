@@ -54,7 +54,7 @@ export function OnboardingButtons() {
       {isPending && loadingFor && (
         <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-[#001842]/95 backdrop-blur-sm">
           <Loader2 className="size-10 animate-spin text-white" />
-          <p className="font-heading text-base font-semibold text-white">
+          <p className="font-sans text-base font-semibold text-white">
             {loadingFor === "login" ? "Iniciando sesión..." : "Creando cuenta..."}
           </p>
         </div>
