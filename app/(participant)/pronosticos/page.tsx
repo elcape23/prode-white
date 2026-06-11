@@ -64,6 +64,8 @@ export default async function PronosticosPage() {
       scheduledAt: m.scheduledAt,
       initialHome: pred?.homeScore ?? null,
       initialAway: pred?.awayScore ?? null,
+      resultHome: m.homeScore ?? null,
+      resultAway: m.awayScore ?? null,
     };
   };
 
