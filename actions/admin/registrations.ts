@@ -88,3 +88,17 @@ export async function reactivateRegistration(
 
   return { success: "Participante reactivado." };
 }
+
+export async function updateParticipantSponsor(
+  participantId: string,
+  sponsorCodeId: string | null
+): Promise<AdminActionState> {
+  await verifyAdmin();
+
+  await prisma.participant.update({
+    where: { id: participantId },
+    data: { sponsorCodeId },
+  });
+
+  return { success: "Sponsor actualizado." };
+}

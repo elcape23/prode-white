@@ -8,8 +8,8 @@ export const SPONSOR_CODES: Record<string, { sponsorName: string }> = {
   CADINC35OFF:    { sponsorName: "CADINC" },
 };
 
-export const GENERAL_PRICE = 8000;
-export const SPONSOR_PRICE = 5200;
+export const GENERAL_PRICE = 10000;
+export const SPONSOR_PRICE = GENERAL_PRICE * 0.6; // 40% off
 export const MAX_USES_PER_SPONSOR = 10;
 
 export const SPONSORS_DISPLAY = [

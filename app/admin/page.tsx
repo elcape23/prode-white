@@ -18,7 +18,7 @@ export default async function AdminDashboard() {
     where: { status: "APPROVED" },
     select: { pricePaid: true },
   });
-  const revenue = approvedParticipants.reduce((sum, p) => sum + (p.pricePaid ?? 0), 0);
+  const revenue = approvedParticipants.reduce((sum, p) => sum + (p.pricePaid ?? 10000), 0);
 
   const stats = [
     { label: "Total inscriptos", value: total, color: "text-foreground" },

@@ -6,6 +6,7 @@ import { ApproveDialog } from "./approve-dialog";
 import { RejectButton } from "./reject-button";
 import { DeleteButton } from "./delete-button";
 import { ReactivateButton } from "./reactivate-button";
+import { SponsorSelect } from "./sponsor-filter";
 
 const STATUS_LABEL: Record<string, string> = {
   PENDING: "Pendiente",
@@ -22,10 +23,21 @@ const STATUS_VARIANT: Record<string, "default" | "secondary" | "destructive" | "
 export default async function RegistracionesPage() {
   await verifyAdmin();
 
-  const participants = await prisma.participant.findMany({
-    include: { sponsorCode: true },
-    orderBy: { createdAt: "desc" },
-  });
+  const [participants, sponsorStats] = await Promise.all([
+    prisma.participant.findMany({
+      include: { sponsorCode: true },
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.sponsorCode.findMany({
+      include: {
+        _count: {
+          select: {
+            participants: { where: { status: { in: ["APPROVED", "PENDING"] } } },
+          },
+        },
+      },
+    }),
+  ]);
 
   const byStatus = {
     PENDING: participants.filter((p) => p.status === "PENDING"),
@@ -33,15 +45,11 @@ export default async function RegistracionesPage() {
     REJECTED: participants.filter((p) => p.status === "REJECTED"),
   };
 
-  const sponsorStats = await prisma.sponsorCode.findMany({
-    include: {
-      _count: {
-        select: {
-          participants: { where: { status: { in: ["APPROVED", "PENDING"] } } },
-        },
-      },
-    },
-  });
+  const sponsorOptions = sponsorStats.map((sc) => ({
+    id: sc.id,
+    sponsorName: sc.sponsorName,
+    code: sc.code,
+  }));
 
   return (
     <div className="space-y-6">
@@ -109,24 +117,23 @@ export default async function RegistracionesPage() {
                     </div>
                   </div>
 
-                  <div className="text-sm grid grid-cols-2 gap-x-4 gap-y-1">
-                    <span className="text-muted-foreground">Pago ref.</span>
-                    <span className="truncate">{p.paymentReference ?? "—"}</span>
-
+                  <div className="text-sm grid grid-cols-2 gap-x-4 gap-y-1 items-center">
                     <span className="text-muted-foreground">Monto</span>
-                    <span className="font-medium">${(p.pricePaid ?? 0).toLocaleString("es-AR")}</span>
-
-                    {p.sponsorCode && (
-                      <>
-                        <span className="text-muted-foreground">Sponsor</span>
-                        <span className="text-fg-success text-xs font-medium">
-                          {p.sponsorCode.sponsorName} ({p.sponsorCode.code})
-                        </span>
-                      </>
-                    )}
+                    <span className="font-medium">${(p.pricePaid ?? 10000).toLocaleString("es-AR")}</span>
 
                     <span className="text-muted-foreground">Fecha</span>
                     <span>{new Date(p.createdAt).toLocaleDateString("es-AR")}</span>
+
+                    {sponsorOptions.length > 0 && (
+                      <>
+                        <span className="text-muted-foreground">Sponsor</span>
+                        <SponsorSelect
+                          participantId={p.id}
+                          currentSponsorCodeId={p.sponsorCodeId ?? null}
+                          sponsors={sponsorOptions}
+                        />
+                      </>
+                    )}
 
                     {p.pin && (
                       <>
