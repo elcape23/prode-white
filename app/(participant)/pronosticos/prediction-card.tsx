@@ -6,7 +6,7 @@ import { savePrediction } from "@/actions/predictions";
 import { calculateMatchPoints } from "@/lib/scoring";
 import { flagSrc, teamNameShort } from "@/lib/flags";
 
-const LOCK_MS = 30 * 60 * 1000;
+const LOCK_MS = 15 * 60 * 1000;
 
 function msUntilLock(scheduledAt: Date) {
   return new Date(scheduledAt).getTime() - LOCK_MS - Date.now();

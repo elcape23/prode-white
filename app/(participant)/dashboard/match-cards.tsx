@@ -6,9 +6,9 @@ import { savePrediction } from "@/actions/predictions";
 import { flagSrc, teamNameEs, teamNameShort } from "@/lib/flags";
 
 const TZ = "America/Argentina/Buenos_Aires";
-const LOCK_MS = 30 * 60 * 1000;
+const LOCK_MS = 15 * 60 * 1000;
 
-/** ms hasta que el partido se bloquea (30 min antes del saque). */
+/** ms hasta que el partido se bloquea (15 min antes del saque). */
 function msUntilLock(scheduledAt: Date) {
   return new Date(scheduledAt).getTime() - LOCK_MS - Date.now();
 }
