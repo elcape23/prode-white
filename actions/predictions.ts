@@ -5,7 +5,7 @@ import prisma from "@/lib/prisma";
 import { Prisma } from "@/generated/prisma/client";
 import { verifyParticipant } from "@/lib/dal";
 
-const LOCK_MINUTES = 30;
+const LOCK_MINUTES = 15;
 const TOURNAMENT_ID = "default-tournament";
 
 export type PredictionResult =
