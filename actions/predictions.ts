@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import { Prisma } from "@/generated/prisma/client";
 import { verifyParticipant } from "@/lib/dal";
+import { getBonusDeadline } from "@/lib/bonus";
 
 const LOCK_MINUTES = 15;
 const TOURNAMENT_ID = "default-tournament";
@@ -53,34 +54,7 @@ export async function saveBonusPredictions(
   const session = await verifyParticipant();
 
   // Los bonus quedan abiertos hasta que arranca la SEGUNDA FECHA (jornada 2).
-  // El campo `round` identifica al grupo ("Grupos – Grupo A"), no a la fecha:
-  // cada grupo juega MATCHES_PER_MATCHDAY partidos por jornada. Recorriendo los
-  // partidos por fecha cuento la posición dentro de cada grupo; el primero que
-  // cae en la jornada >= 2 es el inicio de la segunda fecha (misma lógica que
-  // pronosticos/page.tsx).
-  const MATCHES_PER_MATCHDAY = 2;
-  const isGroupStage = (round: string) => /grupo/i.test(round);
-  const groupLabel = (round: string) =>
-    round.replace(/^\s*grupos\s*[–-]\s*/i, "").trim() || round;
-
-  const allMatches = await prisma.match.findMany({
-    where: { tournamentId: TOURNAMENT_ID },
-    orderBy: { scheduledAt: "asc" },
-    select: { round: true, scheduledAt: true },
-  });
-
-  const seenPerGroup = new Map<string, number>();
-  let secondMatchdayStart: Date | null = null;
-  for (const m of allMatches) {
-    if (!isGroupStage(m.round)) continue;
-    const label = groupLabel(m.round);
-    const pos = seenPerGroup.get(label) ?? 0; // posición 0-indexada dentro del grupo
-    seenPerGroup.set(label, pos + 1);
-    if (Math.floor(pos / MATCHES_PER_MATCHDAY) + 1 >= 2) {
-      secondMatchdayStart = m.scheduledAt;
-      break;
-    }
-  }
+  const secondMatchdayStart = await getBonusDeadline(TOURNAMENT_ID);
 
   if (secondMatchdayStart && new Date() >= secondMatchdayStart) {
     return { ok: false, error: "La segunda fecha ya comenzó. Los pronósticos bonus están cerrados." };
