@@ -78,13 +78,50 @@ function MatchdayAccordion({ title, groups }: { title: string; groups: GroupBloc
   );
 }
 
+/** Acordeón de ronda de eliminación ("16vos", "8vos", …) con el mismo
+ *  encabezado tipo píldora que las jornadas ("Partido N"). */
+function RoundAccordion({ title, matches }: { title: string; matches: MatchRowProps[] }) {
+  const [open, setOpen] = useState(true);
+
+  return (
+    <div className="flex w-full flex-col items-center gap-4">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className="flex w-full items-center justify-center gap-2.5 rounded-full bg-[color:var(--color-neutral-200)] px-5 py-2.5"
+      >
+        <span className="text-base font-semibold tracking-tight text-foreground">
+          {title}
+        </span>
+        <ArrowDown01Icon
+          size={20}
+          className={`text-foreground transition-transform ${open ? "" : "-rotate-180"}`}
+          strokeWidth={2}
+        />
+      </button>
+
+      {open && (
+        <div className="w-full overflow-hidden rounded-2xl bg-card shadow-[0px_4px_12px_0px_rgba(0,0,0,0.15)]">
+          <div className="flex flex-col gap-6 py-6">
+            {matches.map((m) => (
+              <MatchRow key={m.matchId} {...m} />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /** Una fila con equipos sin definir ("Por definir") aún no es jugable. */
 const isPorDefinir = (m: MatchRowProps) =>
   m.homeTeam === "Por definir" || m.awayTeam === "Por definir";
 const cardHasPorDefinir = (matches: MatchRowProps[]) => matches.some(isPorDefinir);
 
 export function PronosticosClient({ sections }: { sections: Section[] }) {
-  // Oculta las tarjetas cuyos partidos tengan equipos "Por definir".
+  // Oculta las tarjetas de fase de grupos cuyos partidos tengan equipos
+  // "Por definir". Las rondas de eliminación (playoff) se muestran siempre,
+  // aunque sus equipos todavía no estén definidos.
   const visibleSections = sections
     .map((section) => {
       if (section.kind === "round") return section;
@@ -94,9 +131,7 @@ export function PronosticosClient({ sections }: { sections: Section[] }) {
       };
     })
     .filter((section) =>
-      section.kind === "round"
-        ? !cardHasPorDefinir(section.matches)
-        : section.groups.length > 0,
+      section.kind === "round" ? true : section.groups.length > 0,
     );
 
   return (
@@ -105,9 +140,7 @@ export function PronosticosClient({ sections }: { sections: Section[] }) {
         section.kind === "matchday" ? (
           <MatchdayAccordion key={section.title} title={section.title} groups={section.groups} />
         ) : (
-          <div key={section.title} className="flex w-full flex-col gap-5">
-            <GroupCard title={section.title} matches={section.matches} />
-          </div>
+          <RoundAccordion key={section.title} title={section.title} matches={section.matches} />
         ),
       )}
     </div>
