@@ -43,8 +43,11 @@ export async function syncResultsFromApi(_prev: SyncResult): Promise<SyncResult>
     });
     if (!dbMatch) continue;
 
-    const homeScore: number = m.score.fullTime.home;
-    const awayScore: number = m.score.fullTime.away;
+    // Ignore penalty shootouts: the result is the score after 120 minutes.
+    // football-data.org adds shootout goals into `fullTime`, so subtract the
+    // `penalties` totals (null for matches not decided on penalties).
+    const homeScore: number = m.score.fullTime.home - (m.score.penalties?.home ?? 0);
+    const awayScore: number = m.score.fullTime.away - (m.score.penalties?.away ?? 0);
 
     // Skip if score didn't change
     if (dbMatch.homeScore === homeScore && dbMatch.awayScore === awayScore) continue;
