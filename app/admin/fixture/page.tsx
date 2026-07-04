@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { DeleteMatchButton } from "./delete-match-button";
 import { ClearFixtureButton } from "./clear-fixture-button";
 import { ImportApiButton } from "./import-api-button";
+import { UpdateKnockoutButton } from "./update-knockout-button";
 import { ImportPlayersButton } from "./import-players-button";
 import { SyncResultsButton } from "./sync-results-button";
 
@@ -43,6 +44,7 @@ export default async function FixtureAdminPage() {
         <div className="flex gap-2 flex-wrap">
           {matches.length > 0 && <ClearFixtureButton />}
           {matches.length > 0 && <SyncResultsButton />}
+          {matches.length > 0 && <UpdateKnockoutButton />}
           <ImportApiButton />
           <ImportPlayersButton />
           <Link
