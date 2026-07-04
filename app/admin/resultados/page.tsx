@@ -17,7 +17,7 @@ export default async function ResultadosPage() {
 
   const matches = await prisma.match.findMany({
     where: { tournamentId: TOURNAMENT_ID },
-    orderBy: { scheduledAt: "asc" },
+    orderBy: { scheduledAt: "desc" },
   });
 
   const withResult = matches.filter((m) => m.homeScore !== null);
