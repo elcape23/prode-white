@@ -10,6 +10,13 @@ export type Section =
   | { kind: "matchday"; title: string; groups: GroupBlock[] }
   | { kind: "round"; title: string; matches: MatchRowProps[] };
 
+/** Un partido está "terminado" cuando ya tiene resultado cargado. */
+const isPlayed = (m: MatchRowProps) =>
+  m.resultHome !== null && m.resultAway !== null;
+/** Una jornada/ronda está terminada cuando todos sus partidos lo están. */
+const allPlayed = (matches: MatchRowProps[]) =>
+  matches.length > 0 && matches.every(isPlayed);
+
 /** Tarjeta-acordeón de un grupo. Abierta por defecto; toggle manual. */
 function GroupCard({ title, matches }: { title: string; matches: MatchRowProps[] }) {
   const [open, setOpen] = useState(true);
@@ -48,7 +55,10 @@ function GroupCard({ title, matches }: { title: string; matches: MatchRowProps[]
 
 /** Acordeón de jornada ("Partido N") que abre/cierra todos sus grupos. */
 function MatchdayAccordion({ title, groups }: { title: string; groups: GroupBlock[] }) {
-  const [open, setOpen] = useState(true);
+  // Las jornadas ya jugadas arrancan colapsadas por defecto.
+  const [open, setOpen] = useState(
+    !allPlayed(groups.flatMap((g) => g.matches)),
+  );
 
   return (
     <div className="flex w-full flex-col items-center gap-4">
@@ -81,7 +91,8 @@ function MatchdayAccordion({ title, groups }: { title: string; groups: GroupBloc
 /** Acordeón de ronda de eliminación ("16vos", "8vos", …) con el mismo
  *  encabezado tipo píldora que las jornadas ("Partido N"). */
 function RoundAccordion({ title, matches }: { title: string; matches: MatchRowProps[] }) {
-  const [open, setOpen] = useState(true);
+  // Las rondas ya jugadas arrancan colapsadas por defecto.
+  const [open, setOpen] = useState(!allPlayed(matches));
 
   return (
     <div className="flex w-full flex-col items-center gap-4">
