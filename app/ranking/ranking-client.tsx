@@ -3,7 +3,9 @@
 import { useState, useTransition } from "react";
 import { ArrowDown01Icon, GlobeIcon, SquareLock02Icon } from "hugeicons-react";
 import {
+  getParticipantBonusPredictions,
   getParticipantPredictions,
+  type BonusEntry,
   type PredictionEntry,
 } from "@/actions/participants";
 import {
@@ -146,6 +148,70 @@ function GroupCard({ title, entries }: { title: string; entries: PredictionEntry
           {entries.map((entry) => (
             <ReadonlyMatchRow key={entry.matchId} entry={entry} />
           ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Bonus card (mirrors GroupCard, shows bonus picks) ───────────────────────
+
+const BONUS_FIELDS: { position: string; label: string; isCountry: boolean }[] = [
+  { position: "CHAMPION", label: "Equipo campeón", isCountry: true },
+  { position: "BEST_PLAYER", label: "Mejor jugador", isCountry: false },
+  { position: "TOP_SCORER", label: "Goleador", isCountry: false },
+  { position: "BEST_YOUNG_PLAYER", label: "Mejor jugador jóven", isCountry: false },
+];
+
+function BonusCard({ bonus }: { bonus: BonusEntry[] }) {
+  const [open, setOpen] = useState(true);
+  const byPosition = new Map(bonus.map((b) => [b.position, b]));
+
+  return (
+    <div className="w-full overflow-hidden rounded-2xl bg-card shadow-[0px_4px_12px_0px_rgba(0,0,0,0.15)]">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className="flex w-full items-center gap-3 bg-[#F8F8F8] p-3 text-left"
+      >
+        <div className="flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-md">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/images/logo.svg" alt="" className="size-7 object-contain" />
+        </div>
+        <span className="flex-1 text-sm font-semibold tracking-tight text-foreground">
+          Bonus
+        </span>
+        <ArrowDown01Icon
+          size={20}
+          className={`text-fg-secondary transition-transform ${open ? "" : "-rotate-180"}`}
+          strokeWidth={2}
+        />
+      </button>
+
+      {open && (
+        <div className="flex flex-col gap-4 p-3">
+          {BONUS_FIELDS.map(({ position, label, isCountry }) => {
+            const entry = byPosition.get(position);
+            return (
+              <div key={position} className="flex items-center gap-3">
+                <p className="min-w-0 flex-1 text-[13px] font-medium tracking-tight text-fg-secondary">
+                  {label}
+                </p>
+                {entry ? (
+                  <div className="flex shrink-0 items-center gap-1.5">
+                    {isCountry && <Flag team={entry.teamName} />}
+                    <p className="text-[13px] font-medium tracking-tight text-foreground">
+                      {isCountry ? teamNameShort(entry.teamName) : entry.teamName}
+                    </p>
+                  </div>
+                ) : (
+                  <p className="shrink-0 text-[13px] tracking-tight text-fg-tertiary">
+                    Sin elegir
+                  </p>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
@@ -325,15 +391,21 @@ export function RankingClient({ ranked }: { ranked: RankedParticipant[] }) {
   const [open, setOpen] = useState(false);
   const [selectedName, setSelectedName] = useState("");
   const [predictions, setPredictions] = useState<PredictionEntry[]>([]);
+  const [bonus, setBonus] = useState<BonusEntry[]>([]);
   const [isPending, startTransition] = useTransition();
 
   const handleClick = (id: string, name: string) => {
     setSelectedName(name);
     setPredictions([]);
+    setBonus([]);
     setOpen(true);
     startTransition(async () => {
-      const data = await getParticipantPredictions(id);
+      const [data, bonusData] = await Promise.all([
+        getParticipantPredictions(id),
+        getParticipantBonusPredictions(id),
+      ]);
       setPredictions(data);
+      setBonus(bonusData);
     });
   };
 
@@ -405,6 +477,7 @@ export function RankingClient({ ranked }: { ranked: RankedParticipant[] }) {
                     </div>
                   ),
                 )}
+                {bonus.length > 0 && <BonusCard bonus={bonus} />}
               </div>
             )}
           </div>

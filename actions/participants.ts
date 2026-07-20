@@ -17,6 +17,29 @@ export type PredictionEntry = {
   round: string;
 };
 
+export type BonusEntry = {
+  position: string;
+  teamName: string;
+  points: number | null;
+};
+
+export async function getParticipantBonusPredictions(
+  participantId: string
+): Promise<BonusEntry[]> {
+  await verifyParticipant();
+
+  const bonus = await prisma.bonusPrediction.findMany({
+    where: { participantId, tournamentId: TOURNAMENT_ID },
+    select: { position: true, teamName: true, points: true },
+  });
+
+  return bonus.map((b) => ({
+    position: b.position,
+    teamName: b.teamName,
+    points: b.points,
+  }));
+}
+
 export async function getParticipantPredictions(
   participantId: string
 ): Promise<PredictionEntry[]> {
