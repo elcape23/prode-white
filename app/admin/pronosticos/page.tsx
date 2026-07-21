@@ -14,30 +14,41 @@ export default async function PronosticosAdminPage({
 
   const { ronda: selectedRound } = await searchParams;
 
-  const [participants, allMatches, predictions] = await Promise.all([
-    prisma.participant.findMany({
-      where: { status: "APPROVED" },
-      orderBy: { name: "asc" },
-      select: { id: true, name: true },
-    }),
-    prisma.match.findMany({
-      where: { tournamentId: TOURNAMENT_ID },
-      orderBy: { scheduledAt: "asc" },
-    }),
-    prisma.prediction.findMany({
-      where: {
-        participant: { status: "APPROVED" },
-        match: { tournamentId: TOURNAMENT_ID },
-      },
-      select: {
-        participantId: true,
-        matchId: true,
-        homeScore: true,
-        awayScore: true,
-        points: true,
-      },
-    }),
-  ]);
+  const [participants, allMatches, predictions, bonusPredictions] =
+    await Promise.all([
+      prisma.participant.findMany({
+        where: { status: "APPROVED" },
+        orderBy: { name: "asc" },
+        select: { id: true, name: true },
+      }),
+      prisma.match.findMany({
+        where: { tournamentId: TOURNAMENT_ID },
+        orderBy: { scheduledAt: "asc" },
+      }),
+      prisma.prediction.findMany({
+        where: {
+          participant: { status: "APPROVED" },
+          match: { tournamentId: TOURNAMENT_ID },
+        },
+        select: {
+          participantId: true,
+          matchId: true,
+          homeScore: true,
+          awayScore: true,
+          points: true,
+        },
+      }),
+      prisma.bonusPrediction.findMany({
+        where: {
+          participant: { status: "APPROVED" },
+          tournamentId: TOURNAMENT_ID,
+        },
+        select: {
+          participantId: true,
+          points: true,
+        },
+      }),
+    ]);
 
   const rounds = [...new Set(allMatches.map((m) => m.round))];
 
@@ -53,14 +64,32 @@ export default async function PronosticosAdminPage({
     predMap.get(pred.participantId)!.set(pred.matchId, pred);
   }
 
-  const totalPoints = new Map<string, number>();
+  const matchPoints = new Map<string, number>();
   for (const pred of predictions) {
     if (pred.points !== null) {
-      totalPoints.set(
+      matchPoints.set(
         pred.participantId,
-        (totalPoints.get(pred.participantId) ?? 0) + pred.points,
+        (matchPoints.get(pred.participantId) ?? 0) + pred.points,
       );
     }
+  }
+
+  const bonusPoints = new Map<string, number>();
+  for (const bp of bonusPredictions) {
+    if (bp.points !== null) {
+      bonusPoints.set(
+        bp.participantId,
+        (bonusPoints.get(bp.participantId) ?? 0) + bp.points,
+      );
+    }
+  }
+
+  const totalPoints = new Map<string, number>();
+  for (const p of participants) {
+    totalPoints.set(
+      p.id,
+      (matchPoints.get(p.id) ?? 0) + (bonusPoints.get(p.id) ?? 0),
+    );
   }
 
   const sortedParticipants = [...participants].sort(
@@ -145,6 +174,9 @@ export default async function PronosticosAdminPage({
                     )}
                   </th>
                 ))}
+                <th className="px-3 py-3 font-semibold text-center min-w-[64px]">
+                  Bonus
+                </th>
                 <th className="px-4 py-3 font-semibold text-right sticky right-0 bg-muted/40 z-10 min-w-[56px]">
                   Pts
                 </th>
@@ -153,6 +185,7 @@ export default async function PronosticosAdminPage({
             <tbody>
               {sortedParticipants.map((p, i) => {
                 const preds = predMap.get(p.id);
+                const bonus = bonusPoints.get(p.id) ?? 0;
                 const total = totalPoints.get(p.id) ?? 0;
                 return (
                   <tr
@@ -194,6 +227,17 @@ export default async function PronosticosAdminPage({
                         </td>
                       );
                     })}
+                    <td className="px-3 py-3 text-center">
+                      {bonus > 0 ? (
+                        <span className="font-bold text-fg-success text-xs">
+                          {bonus}p
+                        </span>
+                      ) : (
+                        <span className="text-muted-foreground/30 text-xs">
+                          —
+                        </span>
+                      )}
+                    </td>
                     <td className="px-4 py-3 text-right sticky right-0 bg-card group-hover:bg-muted/30 z-10 transition-colors">
                       {total > 0 ? (
                         <span className="font-black text-fg-brand">{total}</span>

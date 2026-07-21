@@ -31,6 +31,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           { href: "/admin/cuentas", label: "Cuentas" },
           { href: "/admin/fixture", label: "Fixture" },
           { href: "/admin/resultados", label: "Resultados" },
+          { href: "/admin/bonus", label: "Bonus" },
           { href: "/admin/pronosticos", label: "Pronósticos" },
         ].map(({ href, label }) => (
           <Link
